@@ -3,23 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartE-commercePlatform", "SmartE-commercePlatform\SmartE-commercePlatform.csproj", "{70F79130-6BB5-4E83-8CB0-13A0035ABD87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartE-commercePlatform", "SmartE-commercePlatform\SmartE-commercePlatform.csproj", "{70F79130-6BB5-4E83-8CB0-13A0035ABD87}"
 	ProjectSection(ProjectDependencies) = postProject
 		{052D8DA2-8A78-493B-9D8F-A8C8C38283D4} = {052D8DA2-8A78-493B-9D8F-A8C8C38283D4}
 		{BD59D42F-9919-4468-8FD8-FB327B13FD96} = {BD59D42F-9919-4468-8FD8-FB327B13FD96}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{BD59D42F-9919-4468-8FD8-FB327B13FD96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{BD59D42F-9919-4468-8FD8-FB327B13FD96}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1CBCFB5B-34CC-427B-B75D-D167F36E343B} = {1CBCFB5B-34CC-427B-B75D-D167F36E343B}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{1CBCFB5B-34CC-427B-B75D-D167F36E343B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{1CBCFB5B-34CC-427B-B75D-D167F36E343B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{052D8DA2-8A78-493B-9D8F-A8C8C38283D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{052D8DA2-8A78-493B-9D8F-A8C8C38283D4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1CBCFB5B-34CC-427B-B75D-D167F36E343B} = {1CBCFB5B-34CC-427B-B75D-D167F36E343B}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{6B14C0E4-1547-426E-8411-E4B8A87E8FDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{052D8DA2-8A78-493B-9D8F-A8C8C38283D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{052D8DA2-8A78-493B-9D8F-A8C8C38283D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{052D8DA2-8A78-493B-9D8F-A8C8C38283D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B14C0E4-1547-426E-8411-E4B8A87E8FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B14C0E4-1547-426E-8411-E4B8A87E8FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B14C0E4-1547-426E-8411-E4B8A87E8FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B14C0E4-1547-426E-8411-E4B8A87E8FDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
