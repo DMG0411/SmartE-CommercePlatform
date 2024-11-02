@@ -9,6 +9,7 @@ namespace Application.Utils
         public MappingProfile()
         {
             CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Product, CreateProductDTO>().ReverseMap();
         }
     }
 }

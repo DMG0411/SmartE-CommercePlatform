@@ -1,11 +1,7 @@
-﻿using Domain.Validators;
-
-namespace Domain.Entities
+﻿namespace Application.DTOs
 {
-    public class Product
+    public class CreateProductDTO
     {
-        public Guid Id { get; set; }
-
         public string Type { get; set; }
 
         public string Name { get; set; }
@@ -16,9 +12,8 @@ namespace Domain.Entities
 
         public int Review { get; set; }
 
-        public Product(Guid id, string type, string name, string description, double price, int review)
+        public CreateProductDTO(string type, string name, string description, double price, int review)
         {
-            Id = id;
             Type = type;
             Name = name;
             Description = description;

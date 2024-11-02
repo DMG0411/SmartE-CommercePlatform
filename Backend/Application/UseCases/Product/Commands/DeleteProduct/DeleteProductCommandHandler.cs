@@ -1,8 +1,7 @@
-﻿using Application.UseCases.Commands;
-using Domain.Repositories;
+﻿using Domain.Repositories;
 using MediatR;
 
-namespace Application.UseCases.CommandHandlers
+namespace Application.UseCases.Product.Commands.DeleteProduct
 {
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand>
     {
@@ -15,7 +14,7 @@ namespace Application.UseCases.CommandHandlers
 
         public async Task Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-           await productRepository.DeleteProduct(request.Id);
+            await productRepository.DeleteProduct(request.Id);
         }
     }
 }

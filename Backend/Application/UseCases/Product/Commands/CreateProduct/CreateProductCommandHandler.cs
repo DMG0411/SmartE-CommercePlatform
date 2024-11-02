@@ -1,10 +1,8 @@
-﻿using Application.UseCases.Commands;
-using AutoMapper;
-using Domain.Entities;
+﻿using AutoMapper;
 using Domain.Repositories;
 using MediatR;
 
-namespace Application.UseCases.CommandHandlers
+namespace Application.UseCases.Product.Commands.CreateProduct
 {
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
     {
@@ -19,7 +17,7 @@ namespace Application.UseCases.CommandHandlers
 
         public Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            return productRepository.CreateProduct(new Product(request.Id,request.Type, request.Name, request.Description, request.Price, request.Review));
+            return productRepository.CreateProduct(mapper.Map<Domain.Entities.Product>(request.Product));
         }
     }
 }

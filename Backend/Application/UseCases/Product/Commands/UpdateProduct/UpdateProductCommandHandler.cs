@@ -1,10 +1,8 @@
-﻿using Application.UseCases.Commands;
-using AutoMapper;
-using Domain.Entities;
+﻿using AutoMapper;
 using Domain.Repositories;
 using MediatR;
 
-namespace Application.UseCases.CommandHandlers
+namespace Application.UseCases.Product.Commands.UpdateProduct
 {
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand>
     {
@@ -19,7 +17,7 @@ namespace Application.UseCases.CommandHandlers
 
         public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            await productRepository.UpdateProduct(mapper.Map<Product>(request.Product));
+            await productRepository.UpdateProduct(mapper.Map<Domain.Entities.Product>(request.Product));
         }
 
     }

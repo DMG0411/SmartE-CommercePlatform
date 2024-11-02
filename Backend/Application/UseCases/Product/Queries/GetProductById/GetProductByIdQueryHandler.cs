@@ -1,10 +1,9 @@
 ﻿using Application.DTOs;
-using Application.UseCases.Queries;
 using AutoMapper;
 using Domain.Repositories;
 using MediatR;
 
-namespace Application.UseCases.QueryHandlers
+namespace Application.UseCases.Product.Queries.GetProductById
 {
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDTO>
     {

@@ -1,7 +1,7 @@
 ﻿using Application.DTOs;
 using MediatR;
 
-namespace Application.UseCases.Queries
+namespace Application.UseCases.Product.Queries.GetProductById
 {
     public class GetProductByIdQuery : IRequest<ProductDTO>
     {

@@ -1,7 +1,7 @@
 ﻿using Application.DTOs;
 using MediatR;
 
-namespace Application.UseCases.Commands
+namespace Application.UseCases.Product.Commands.UpdateProduct
 {
     public class UpdateProductCommand : IRequest
     {
