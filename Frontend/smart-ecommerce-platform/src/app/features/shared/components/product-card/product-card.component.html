@@ -1,4 +1,10 @@
 <div class="product-card">
+  <button class="edit-btn" matTooltip="Edit" (click)="openEditDialog()">
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button class="delete-btn" matTooltip="Delete" (click)="openDeleteDialog()">
+    <mat-icon>delete</mat-icon>
+  </button>
   <h3>{{ product.name }}</h3>
   <p>{{ product.description }}</p>
   <p>Price: {{ product.price }} {{ currency }}</p>

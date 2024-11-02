@@ -37,7 +37,7 @@ namespace Product.Controllers
         public async Task<ActionResult> UpdateProduct(ProductDTO product)
         {
             await mediator.Send(new UpdateProductCommand(product));
-            return Ok(product);
+            return NoContent();
         }
 
         [HttpGet]

@@ -1,6 +1,6 @@
 <div class="home">
-  <button class="add-product-btn">Add a new Product</button>
+  <button class="add-product-btn" (click)="openAddProductModal()">Add a new Product</button>
   <div class="products-container" >
-    <smart-ecommerce-platform-product-card *ngFor="let product of products" [product]="product"></smart-ecommerce-platform-product-card>
+    <smart-ecommerce-platform-product-card *ngFor="let product of products" [product]="product" (productUpdated)="onProductUpdated()"></smart-ecommerce-platform-product-card>
   </div>
 </div>

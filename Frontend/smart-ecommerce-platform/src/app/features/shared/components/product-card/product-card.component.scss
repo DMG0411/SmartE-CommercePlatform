@@ -1,8 +1,35 @@
-.product-card {
-  border: 1px solid #ccc;
-  padding: 16px;
-  margin: 8px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  width: 200px;
+:host {
+  .product-card {
+    border: 1px solid #ccc;
+    padding: 16px;
+    margin: 8px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    width: 200px;
+    position: relative;
+  }
+  .delete-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #d9534f;
+  }
+
+  .edit-btn {
+    position: absolute;
+    top: 7px;
+    right: 36px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #5bc0de;
+  }
+
+  .edit-btn,
+  .delete-btn mat-icon {
+    font-size: 20px;
+  }
 }

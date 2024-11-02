@@ -20,5 +20,9 @@
             Price = price;
             Review = review;
         }
+
+        public CreateProductDTO()
+        {
+        }
     }
 }

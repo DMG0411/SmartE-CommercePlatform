@@ -1,0 +1,38 @@
+<div class="modal">
+  <div class="modal-header">
+    <h2 class="modal-title">{{modalTitle}}</h2>
+    <button class="close-btn" (click)="onClose()">×</button>
+  </div>
+  <div class="modal-content">
+    <form [formGroup]="addProductForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" formControlName="name"/>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Type</label>
+        <input type="text" id="type" formControlName="type"/>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" formControlName="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="price">Price</label>
+        <input type="text" id="price" name="price" formControlName="price"/>
+      </div>
+      <div class="form-group">
+        <label for="review">Review</label>
+        <input type="text" id="review" name="review" formControlName="review"/>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="no-btn" (click)="onClose()">Cancel</button>
+    <button class="proceed-btn" [disabled]="isFormInvalid()" (click)="onProceedClick()">
+      Proceed
+    </button>
+  </div>
+</div>

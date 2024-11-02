@@ -1,0 +1,130 @@
+:host {
+  .modal {
+    overflow: hidden;
+    background-color: cadetblue;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    max-width: 600px;
+    margin: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid black;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+  }
+
+  .close-btn {
+    position: absolute;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-100%);
+    transition: color 0.3s;
+
+    &:hover {
+      color: #ff0000;
+    }
+  }
+
+  .modal-content {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+    max-width: 100% label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      max-width: 500px;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      background-color: #f9f9f9;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+  }
+
+  .warning-text {
+    font-size: 0.9rem;
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  button {
+    transition: background-color 0.3s;
+  }
+
+  .no-btn {
+    background-color: red;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .proceed-btn {
+    background-color: #20db0f;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:disabled {
+      background-color: #c0c0c0;
+      cursor: not-allowed;
+    }
+  }
+
+  .no-btn:hover {
+    background-color: #b51105;
+  }
+
+  .proceed-btn:hover:not(:disabled) {
+    background-color: green;
+  }
+}

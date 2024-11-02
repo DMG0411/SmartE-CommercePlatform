@@ -28,7 +28,7 @@ export class ProductService {
   }
 
   updateProduct(product: Product) {
-    return this._httpClient.put<Product>(this._baseUrl, product, this.options);
+    return this._httpClient.put(this._baseUrl, product, this.options);
   }
 
   deleteProduct(id: number) {
