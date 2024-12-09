@@ -33,5 +33,8 @@ jobs:
         run: npm run build --prod
         working-directory: Frontend/smart-ecommerce-platform
 
+      - name: Set up ghpages
+        run: npm install angular-cli-ghpages --save-dev
+
       - name: Deploy to GitHub Pages
         run: npx angular-cli-ghpages --dir=dist/smart-ecommerce-platform
