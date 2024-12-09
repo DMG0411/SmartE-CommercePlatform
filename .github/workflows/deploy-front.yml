@@ -1,0 +1,41 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Navigate to frontend folder
+        run: cd Frontend/Smart-ecommercePlatform 
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: Frontend/Smart-ecommercePlatform
+
+      - name: Build Angular project
+        run: npm run build --prod
+        working-directory: Frontend/Smart-ecommercePlatform
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages
+          folder: dist/smart-ecommerce-platform
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
