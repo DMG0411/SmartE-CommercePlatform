@@ -36,6 +36,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           branch: gh-pages
-          folder: dist/smart-ecommerce-platform
+          folder: Frontend/smart-ecommerce-platform/dist/smart-ecommerce-platform
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
