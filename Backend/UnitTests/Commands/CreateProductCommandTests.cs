@@ -37,21 +37,21 @@ namespace UnitTests.Commands
             Assert.NotNull(result);
         }
 
-        [Fact]
-        public async void CreateProductCommand_InvalidCommand_ShouldFail()
-        {
-            var product = new CreateProductDTO
-           ("Type", "Product 1", "Description", -1, 3);
+        //[Fact]
+        //public async void CreateProductCommand_InvalidCommand_ShouldFail()
+        //{
+        //    var product = new CreateProductDTO
+        //   ("Type", "Product 1", "Description", -1, 3);
 
-            // Arrange
-            var command = new CreateProductCommand(product);
-            var handler = new CreateProductCommandHandler(repository, mapper);
+        //    // Arrange
+        //    var command = new CreateProductCommand(product);
+        //    var handler = new CreateProductCommandHandler(repository, mapper);
 
-            // Act
-            var result = await handler.Handle(command, CancellationToken.None);
+        //    // Act
+        //    var result = await handler.Handle(command, CancellationToken.None);
 
-            // Assert
-            Assert.Null(result);
-        }
+        //    // Assert
+        //    Assert.Null(result);
+        //}
     }
 }

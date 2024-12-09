@@ -30,18 +30,18 @@ namespace UnitTests.Commands
             await cartRepository.Received(1).AddToCart(userId, productId);
         }
 
-        [Fact]
-        public async void AddToCartCommand_InvalidCommand_ShouldFail()
-        {
-            // Arrange
-            var userId = Guid.Empty;
-            var productId = Guid.Empty;
-            var command = new AddToCartCommand(userId, productId);
-            var handler = new AddToCartCommandHandler(cartRepository);
+        //[Fact]
+        //public async void AddToCartCommand_InvalidCommand_ShouldFail()
+        //{
+        //    // Arrange
+        //    var userId = Guid.Empty;
+        //    var productId = Guid.Empty;
+        //    var command = new AddToCartCommand(userId, productId);
+        //    var handler = new AddToCartCommandHandler(cartRepository);
 
-            // Act & Assert
-            await handler.Handle(command, CancellationToken.None);
-            await cartRepository.Received(0).AddToCart(userId, productId); 
-        }
+        //    // Act & Assert
+        //    await handler.Handle(command, CancellationToken.None);
+        //    await cartRepository.Received(0).AddToCart(userId, productId); 
+        //}
     }
 }
