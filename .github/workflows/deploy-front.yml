@@ -22,15 +22,15 @@ jobs:
           node-version: '16'
 
       - name: Navigate to frontend folder
-        run: cd Frontend/Smart-ecommercePlatform 
+        run: cd Frontend/smart-ecommerce-platform
 
       - name: Install dependencies
         run: npm install
-        working-directory: Frontend/Smart-ecommercePlatform
+        working-directory: Frontend/smart-ecommerce-platform
 
       - name: Build Angular project
         run: npm run build --prod
-        working-directory: Frontend/Smart-ecommercePlatform
+        working-directory: Frontend/smart-ecommerce-platform
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.3.3
