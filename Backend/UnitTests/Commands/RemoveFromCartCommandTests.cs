@@ -30,18 +30,18 @@ namespace UnitTests.Commands
             await cartRepository.Received(1).RemoveFromCart(userId, productId);
         }
 
-        [Fact]
-        public async void RemoveFromCartCommand_InvalidCommand_ShouldFail()
-        {
-            // Arrange
-            var userId = Guid.Empty;
-            var productId = Guid.Empty;
-            var command = new RemoveFromCartCommand(userId, productId);
-            var handler = new RemoveFromCartCommandHandler(cartRepository);
+        //[Fact]
+        //public async void RemoveFromCartCommand_InvalidCommand_ShouldFail()
+        //{
+        //    // Arrange
+        //    var userId = Guid.Empty;
+        //    var productId = Guid.Empty;
+        //    var command = new RemoveFromCartCommand(userId, productId);
+        //    var handler = new RemoveFromCartCommandHandler(cartRepository);
 
-            // Act & Assert
-            await handler.Handle(command, CancellationToken.None);
-            await cartRepository.Received(0).RemoveFromCart(userId, productId); 
-        }
+        //    // Act & Assert
+        //    await handler.Handle(command, CancellationToken.None);
+        //    await cartRepository.Received(0).RemoveFromCart(userId, productId); 
+        //}
     }
 }

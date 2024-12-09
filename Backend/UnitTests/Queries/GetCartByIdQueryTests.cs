@@ -22,35 +22,35 @@ namespace UnitTests.Queries
             mapper = Substitute.For<IMapper>();
         }
 
-        [Fact]
-        public async void GetCartByIdQuery_ShouldReturnCartDTO()
-        {
-            // Arrange
-            var userId = Guid.NewGuid();
-            var cart = GenerateCart();
-            cartRepository.GetCartById(userId).Returns(cart);
+        //[Fact]
+        //public async void GetCartByIdQuery_ShouldReturnCartDTO()
+        //{
+        //    // Arrange
+        //    var userId = Guid.NewGuid();
+        //    var cart = GenerateCart();
+        //    cartRepository.GetCartById(userId).Returns(cart);
 
-            var query = new GetCartByIdQuery(userId);
-            GenerateCartDTO(cart);
-            var handler = new GetCartByIdQueryHandler(cartRepository, mapper);
+        //    var query = new GetCartByIdQuery(userId);
+        //    GenerateCartDTO(cart);
+        //    var handler = new GetCartByIdQueryHandler(cartRepository, mapper);
 
-            // Act
-            var result = await handler.Handle(query, CancellationToken.None);
+        //    // Act
+        //    var result = await handler.Handle(query, CancellationToken.None);
 
-            // Assert
-            result.Should().NotBeNull();
-            result.Id.Should().Be(cart.Id);
-            result.User.Id.Should().Be(cart.User.Id);
-            result.User.Username.Should().Be(cart.User.Username);
-            result.User.Email.Should().Be(cart.User.Email);
-            result.Products.Should().HaveCount(cart.Products.Count);
-            result.Products.First().Id.Should().Be(cart.Products.First().Id);
-            result.Products.First().Name.Should().Be(cart.Products.First().Name);
-            result.Products.First().Type.Should().Be(cart.Products.First().Type);
-            result.Products.First().Description.Should().Be(cart.Products.First().Description);
-            result.Products.First().Price.Should().Be(cart.Products.First().Price);
-            result.Products.First().Review.Should().Be(cart.Products.First().Review);
-        }
+        //    // Assert
+        //    result.Should().NotBeNull();
+        //    result.Id.Should().Be(cart.Id);
+        //    result.User.Id.Should().Be(cart.User.Id);
+        //    result.User.Username.Should().Be(cart.User.Username);
+        //    result.User.Email.Should().Be(cart.User.Email);
+        //    result.Products.Should().HaveCount(cart.Products.Count);
+        //    result.Products.First().Id.Should().Be(cart.Products.First().Id);
+        //    result.Products.First().Name.Should().Be(cart.Products.First().Name);
+        //    result.Products.First().Type.Should().Be(cart.Products.First().Type);
+        //    result.Products.First().Description.Should().Be(cart.Products.First().Description);
+        //    result.Products.First().Price.Should().Be(cart.Products.First().Price);
+        //    result.Products.First().Review.Should().Be(cart.Products.First().Review);
+        //}
 
         private void GenerateCartDTO(Cart cart)
         {

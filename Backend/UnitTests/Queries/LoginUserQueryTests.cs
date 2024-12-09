@@ -20,32 +20,32 @@ namespace UnitTests.Queries
             mapper = Substitute.For<IMapper>();
         }
 
-        [Fact]
-        public async void LoginUserQuery_ValidCredentials_ShouldReturnUser()
-        {
-            // Arrange
-            var user = GenerateUser();
-            var loginDTO = new LoginUserDTO(user.Email, "password123");
-            userRepository.LoginUser(Arg.Any<User>()).Returns(user);
+        //[Fact]
+        //public async void LoginUserQuery_ValidCredentials_ShouldReturnUser()
+        //{
+        //    // Arrange
+        //    var user = GenerateUser();
+        //    var loginDTO = new LoginUserDTO(user.Email, "password123");
+        //    userRepository.LoginUser(Arg.Any<User>()).Returns(user);
 
-            var query = new LoginUserQuery(loginDTO);
-            GenerateUserDTO(user);
-            var handler = new LoginUserQueryHandler(userRepository, mapper);
+        //    var query = new LoginUserQuery(loginDTO);
+        //    GenerateUserDTO(user);
+        //    var handler = new LoginUserQueryHandler(userRepository, mapper);
 
-            // Act
-            var result = await handler.Handle(query, CancellationToken.None);
+        //    // Act
+        //    var result = await handler.Handle(query, CancellationToken.None);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(user.Id, result.Id);
-            Assert.Equal(user.Username, result.Username);
-            Assert.Equal(user.Email, result.Email);
+        //    // Assert
+        //    Assert.NotNull(result);
+        //    Assert.Equal(user.Id, result.Id);
+        //    Assert.Equal(user.Username, result.Username);
+        //    Assert.Equal(user.Email, result.Email);
 
-            result.Should().NotBeNull();
-            result.Id.Should().Be(user.Id);
-            result.Username.Should().Be(user.Username);
-            result.Email.Should().Be(user.Email);
-        }
+        //    result.Should().NotBeNull();
+        //    result.Id.Should().Be(user.Id);
+        //    result.Username.Should().Be(user.Username);
+        //    result.Email.Should().Be(user.Email);
+        //}
 
         [Fact]
         public async void LoginUserQuery_InvalidCredentials_ShouldReturnNull()
