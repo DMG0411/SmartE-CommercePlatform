@@ -27,6 +27,15 @@ export class HomeComponent implements OnDestroy {
   products: Product[] = [];
   paginatedProducts: Product[] = [];
 
+  
+  showFilters: boolean = false;  
+  filters = {
+    type: '',
+    minPrice: null,
+    maxPrice: null,
+    minReview: null,
+  };
+
   private _subs$: Subscription = new Subscription();
 
   constructor(
@@ -95,11 +104,19 @@ export class HomeComponent implements OnDestroy {
     this.paginatedProducts = this.products.slice(startIndex, endIndex);
   }
 
+ 
   private getProducts(pageNumber: number, pageSize: number): void {
     this.isLoading = true;
+    const activeFilters = {
+      type: this.filters.type || undefined, 
+      minPrice: this.filters.minPrice ?? undefined, 
+      maxPrice: this.filters.maxPrice ?? undefined, 
+      minReview: this.filters.minReview ?? undefined, 
+    };
+
     this._subs$.add(
       this._productService
-        .getProducts(pageNumber, pageSize)
+        .getFilteredProducts(activeFilters, pageNumber, pageSize) 
         .pipe(
           finalize(() => {
             this.isLoading = false;
@@ -116,4 +133,15 @@ export class HomeComponent implements OnDestroy {
         })
     );
   }
+
+  
+  toggleFilterPanel() {
+    this.showFilters = !this.showFilters;
+  }
+
+  applyFilters() {
+    this.getProducts(this.pageNumber, this.pageSize);
+    this.showFilters = false; 
+  }
 }
+

@@ -25,8 +25,44 @@ export class ProductService {
     pageSize: number
   ): Observable<PaginatedResponse<Product>> {
     let params: HttpParams = new HttpParams()
-      .set('pageNumber', pageNumber)
-      .set('pageSize', pageSize);
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this._httpClient.get<PaginatedResponse<Product>>(this._baseUrl, {
+      ...this.options,
+      params,
+    });
+  }
+
+  // Metoda pentru obținerea produselor filtrate
+  getFilteredProducts(
+    filters: {
+      type?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      minReview?: number;
+    },
+    pageNumber: number,
+    pageSize: number
+  ): Observable<PaginatedResponse<Product>> {
+    let params: HttpParams = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+   
+    if (filters.type) {
+      params = params.set('type', filters.type);
+    }
+    if (filters.minPrice !== undefined) {
+      params = params.set('minPrice', filters.minPrice.toString());
+    }
+    if (filters.maxPrice !== undefined) {
+      params = params.set('maxPrice', filters.maxPrice.toString());
+    }
+    if (filters.minReview !== undefined) {
+      params = params.set('minReview', filters.minReview.toString());
+    }
+
     return this._httpClient.get<PaginatedResponse<Product>>(this._baseUrl, {
       ...this.options,
       params,
@@ -42,16 +78,12 @@ export class ProductService {
   }
 
   deleteProduct(id: string) {
-    return this._httpClient.delete<void>(
-      `${this._baseUrl}/${id}`,
-      this.options
-    );
+    return this._httpClient.delete<void>(`${this._baseUrl}/${id}`, this.options);
   }
 
   getProductById(id: string) {
-    return this._httpClient.get<Product>(
-      `${this._baseUrl}/${id}`,
-      this.options
-    );
+    return this._httpClient.get<Product>(`${this._baseUrl}/${id}`, this.options);
   }
+  
+
 }

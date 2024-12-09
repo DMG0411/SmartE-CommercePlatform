@@ -3,26 +3,40 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     height: calc(100% - 64px);
     width: 100%;
-    background-color: aquamarine;
+    background-color: #AFEEEE;
+    
+    padding: 20px; 
+
+    .button-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 20px;
+
+      .filter-button {
+        margin-right: 10px;
+      }
+    }
 
     .add-product-btn {
       width: 15%;
-      margin-top: 20px;
       padding: 10px;
       background-color: #4caf50;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.3s;
       font-family: cursive;
       font-size: 20px;
 
       &:hover {
         background-color: #45a049;
+        transform: scale(1.05); 
       }
     }
 
@@ -31,12 +45,119 @@
       flex-wrap: wrap;
       justify-content: center;
       margin-top: 20px;
+      width: 100%;
     }
 
     .mat-paginator {
       margin-top: 20px;
       display: flex;
       justify-content: center;
+    }
+
+    .filter-button {
+      button {
+        padding: 12px 24px;
+        background-color: #008cba;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 17px;
+        font-family: cursive;
+
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transform: scale(1);
+
+        &:hover {
+          background-color: #007b9e;
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+          transform: scale(1.05);
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(72, 255, 0, 0.5);
+        }
+      }
+    }
+
+    .filter-panel {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      top: 140px; 
+      left: 270px; 
+      width: 300px; 
+      z-index: 999;
+
+      label {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      input {
+        padding: 8px;
+        margin-bottom: 12px;
+        width: 100%; 
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          border-color: #008cba;
+          outline: none;
+        }
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #45a049;
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      .add-product-btn {
+        width: 40%;  
+      }
+
+      .filter-button {
+        margin-right: 5px;
+      }
+
+      .filter-panel {
+        width: 250px; 
+      }
+    }
+
+    @media (max-width: 480px) {
+      .add-product-btn {
+        width: 60%;  
+      }
+
+      .filter-button {
+        margin-right: 5px;
+      }
+
+      .filter-panel {
+        width: 90%; 
+      }
     }
   }
 }
