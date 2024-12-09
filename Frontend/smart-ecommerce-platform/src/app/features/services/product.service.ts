@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Product } from '../models';
 import { Observable } from 'rxjs';
 import { PaginatedResponse } from '@app/shared';
+import { environment } from '@app/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class ProductService {
     }),
   };
 
-  private _baseUrl: string = 'https://localhost:7078/api/v1/product';
+  private _baseUrl: string = `${environment.apiUrl}/product`;
 
   constructor(private _httpClient: HttpClient) {}
 

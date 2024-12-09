@@ -25,6 +25,7 @@ builder.Services.AddCors(options => options.AddPolicy(name: "CorsPolicy",
                       builder =>
                       {
                           builder.AllowAnyHeader()
+                          .WithOrigins("https://dmg0411.github.io")
                           .AllowAnyMethod()
                           .SetIsOriginAllowed((host) => true)
                           .AllowCredentials()
