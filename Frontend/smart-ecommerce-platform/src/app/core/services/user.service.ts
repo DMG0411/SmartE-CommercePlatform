@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '@app/environment';
 import { User } from '@app/shared';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
@@ -17,7 +18,7 @@ export class UserService {
 
   userLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  private _baseUrl: string = 'https://localhost:7078/api/v1/user';
+  private _baseUrl: string = `${environment.apiUrl}/user`;
 
   constructor(private _httpClient: HttpClient) {}
 
