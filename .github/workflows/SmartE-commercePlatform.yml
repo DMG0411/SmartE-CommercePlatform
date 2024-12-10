@@ -13,8 +13,7 @@ env:
   AZURE_APIM_SERVICENAME: SmartE-commercePlatformapi
   AZURE_APIM_API_ID: SmartE-commercePlatform
   AZURE_APIM_APPSERVICEURL: https://smarte-commerceplatform.azurewebsites.net
-  SWASHBULCKLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
-  SWASHBUCKLE_DOTNET_CORE_VERSION: 6.0.x
+  SWASHBULCKLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.0.0  # Update to a version compatible with .NET 6
   API_IMPORT_SPECIFICATION_PATH: SmartE-commercePlatform/publish/swagger.json
   API_IMPORT_DLL: SmartE-commercePlatform/bin/Release/net8.0/SmartE-commercePlatform.dll
   API_IMPORT_VERSION: v1
@@ -44,14 +43,15 @@ jobs:
 
     - name: Install Swashbuckle CLI .NET Global Tool
       run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBULCKLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
-    
+
     - name: Verify Swagger CLI Installation
       run: dotnet tool list -g
-    
+
     - name: Generate OpenAPI Specification Document
       run: |
-          swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" "${{ env.API_IMPORT_VERSION }}"
-    
+        # Ensure correct paths for DLL and output
+        swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" "${{ env.API_IMPORT_VERSION }}"
+
     - name: Publish application
       run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
