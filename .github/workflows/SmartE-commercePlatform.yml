@@ -27,10 +27,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Install .NET SDK 5.0
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget https://aka.ms/dotnet-core-applaunch?framework=Microsoft.AspNetCore.App&framework_version=5.0.0&arch=x64&rid=linux-x64&os=ubuntu.22.04
+        sudo dpkg -i dotnet-sdk-5.0.0-linux-x64.deb
 
     - name: Restore dependencies
       run: dotnet restore ${{ env.WORKING_DIRECTORY }}
