@@ -1,2 +1,2 @@
 [build]
-start = "dotnet run --project Backend/SmartE-commercePlatform.sln --urls=http://0.0.0.0:5000"
+start = "dotnet build Backend/SmartE-commercePlatform.sln && dotnet run --project Backend/SmartE-commercePlatform/SmartE-commercePlatform.csproj --urls=http://0.0.0.0:5000"
