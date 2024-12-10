@@ -34,7 +34,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Restore
-      run: dotnet restore "${{ env.SOLUTION_FILE }}"
+      run: dotnet restore ${{ env.WORKING_DIRECTORY}}
 
     - name: Restore dependencies
       run: dotnet restore ${{ env.WORKING_DIRECTORY }}
