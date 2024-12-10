@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = (): Observable<boolean | UrlTree> => {
   const http: HttpClient = inject(HttpClient);
   const toastrService: ToastrService = inject(ToastrService);
 
-  const url: string = `${environment}/user/checkToken`;
+  const url: string = `${environment.apiUrl}/user/checkToken`;
 
   return http.get<void>(url).pipe(
     map(() => true),
