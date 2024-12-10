@@ -1,0 +1,2 @@
+[build]
+start = "dotnet run --project Backend/SmartE-commercePlatform.sln --urls=http://0.0.0.0:5000"
