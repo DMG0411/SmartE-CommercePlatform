@@ -27,6 +27,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install .NET Core 5.0 SDK (if needed)
+      run: |
+        wget https://download.visualstudio.microsoft.com/download/pr/627552b4-88a2-48c9-9ebd-dfe5486f32e4/824a90a80a14e45c0d2f7463b5074581/dotnet-sdk-5.0.408-linux-x64.tar.gz
+        mkdir -p $HOME/dotnet
+        tar zxf dotnet-sdk-5.0.408-linux-x64.tar.gz -C $HOME/dotnet
+        echo "$HOME/dotnet" >> $GITHUB_PATH
+        dotnet --version
+
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
