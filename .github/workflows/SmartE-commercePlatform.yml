@@ -14,7 +14,7 @@ env:
   AZURE_APIM_API_ID: SmartE-commercePlatform
   AZURE_APIM_APPSERVICEURL: https://smarte-commerceplatform.azurewebsites.net
   SWASHBULCKLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
-  SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
+  SWASHBUCKLE_DOTNET_CORE_VERSION: 6.0.x
   API_IMPORT_SPECIFICATION_PATH: SmartE-commercePlatform/publish/swagger.json
   API_IMPORT_DLL: SmartE-commercePlatform/bin/Release/net8.0/SmartE-commercePlatform.dll
   API_IMPORT_VERSION: v1
