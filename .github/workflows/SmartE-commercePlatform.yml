@@ -27,13 +27,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install .NET Core 5.0 SDK (if needed)
+    - name: Install .NET 5.0 SDK
       run: |
-        wget https://download.visualstudio.microsoft.com/download/pr/627552b4-88a2-48c9-9ebd-dfe5486f32e4/824a90a80a14e45c0d2f7463b5074581/dotnet-sdk-5.0.408-linux-x64.tar.gz
-        mkdir -p $HOME/dotnet
-        tar zxf dotnet-sdk-5.0.408-linux-x64.tar.gz -C $HOME/dotnet
-        echo "$HOME/dotnet" >> $GITHUB_PATH
-        dotnet --version
+        sudo apt-get update
+        sudo apt-get install -y wget apt-transport-https software-properties-common
+        wget https://packages.microsoft.com/config/ubuntu/22.04/prod.list
+        sudo mv prod.list /etc/apt/sources.list.d/dotnetdev.list
+        sudo apt-get update
+        sudo apt-get install -y dotnet-sdk-5.0
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
