@@ -82,7 +82,6 @@ export class HomeComponent implements OnDestroy {
   }
 
   onPageChange(event: { pageIndex: number; pageSize: number }): void {
-    console.log(event);
     this.pageNumber = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getProducts(event.pageIndex, event.pageSize);
