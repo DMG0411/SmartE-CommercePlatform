@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+      
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -26,8 +31,10 @@ jobs:
       working-directory: Frontend/smart-ecommerce-platform
       run: npm run build -- --configuration=production --base-href "https://dmg0411.github.io/SmartE-CommercePlatform/"
 
-    - name: Deploy
+    - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
+        token: ${{ secrets.GITHUB_TOKEN }}
         folder: Frontend/smart-ecommerce-platform/dist/smart-ecommerce-platform
         branch: gh-pages
+        clean: true
