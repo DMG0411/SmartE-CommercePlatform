@@ -27,13 +27,5 @@ jobs:
       run: npm run build -- --configuration=production --base-href "https://dmg0411.github.io/SmartE-CommercePlatform/"
 
     - name: Deploy to GitHub Pages
-      run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
-        cd Frontend/smart-ecommerce-platform/dist/smart-ecommerce-platform
-        git init
-        git remote add origin https://github.com/DMG0411/SmartE-CommercePlatform.git
-        git checkout -b gh-pages
-        git add .
-        git commit -m "Deploy Angular app to GitHub Pages"
-        git push --force origin gh-pages
+      working-directory: Frontend/smart-ecommerce-platform
+      run: npx angular-cli-ghpages --dir=dist/smart-ecommerce-platform
