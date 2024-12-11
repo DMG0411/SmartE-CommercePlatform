@@ -1,7 +1,7 @@
 <smart-ecommerce-platform-loader *ngIf="isLoading"></smart-ecommerce-platform-loader>
 <div class="home">
   <button class="add-product-btn" (click)="openAddProductModal()">Add a new Product</button>
-  <div class="products-container" >
+  <div class="products-container">
     <smart-ecommerce-platform-product-card *ngFor="let product of products" [product]="product" (productUpdated)="onProductUpdated()"></smart-ecommerce-platform-product-card>
   </div>
   <mat-paginator
