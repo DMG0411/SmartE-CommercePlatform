@@ -28,4 +28,5 @@ jobs:
 
     - name: Deploy to GitHub Pages
       working-directory: Frontend/smart-ecommerce-platform
-      run: npx angular-cli-ghpages --dir=dist/smart-ecommerce-platform
+      run: npx angular-cli-ghpages --dir=dist/smart-ecommerce-platform --no-silent
+
