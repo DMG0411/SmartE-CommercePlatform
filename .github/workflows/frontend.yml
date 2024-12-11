@@ -1,0 +1,31 @@
+name: Deploy Angular App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      working-directory: Frontend/smart-ecommerce-platform
+      run: npm install
+
+    - name: Build Angular app
+      working-directory: Frontend/smart-ecommerce-platform
+      run: npm run build -- --configuration=production --base-href "https://dmg0411.github.io/SmartE-CommercePlatform/"
+
+    - name: Deploy to GitHub Pages
+      working-directory: Frontend/smart-ecommerce-platform
+      run: npx angular-cli-ghpages --dir=dist/smart-ecommerce-platform
