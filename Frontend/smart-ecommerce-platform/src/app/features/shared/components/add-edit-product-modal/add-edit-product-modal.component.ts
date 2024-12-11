@@ -34,11 +34,14 @@ export class AddEditProductModalComponent {
   isFormInvalid(): boolean {
     return (
       this.addProductForm.invalid ||
-      (this._data?.product === this.addProductForm.get('name')?.value &&
-        this._data?.product === this.addProductForm.get('type')?.value &&
-        this._data?.product === this.addProductForm.get('description')?.value &&
-        this._data?.product === this.addProductForm.get('price')?.value &&
-        this._data?.product === this.addProductForm.get('review')?.value)
+      !(
+        this._data?.product.name === this.addProductForm.get('name')?.value &&
+        this._data?.product.type === this.addProductForm.get('type')?.value &&
+        this._data?.product.description ===
+          this.addProductForm.get('description')?.value &&
+        this._data?.product.price === this.addProductForm.get('price')?.value &&
+        this._data?.product.review === this.addProductForm.get('review')?.value
+      )
     );
   }
 
