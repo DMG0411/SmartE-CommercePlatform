@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Product } from '../models';
 import { Observable } from 'rxjs';
-
+import { PaginatedResponse } from '@app/shared';
+import { environment } from 'environments/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,12 +16,21 @@ export class ProductService {
     }),
   };
 
-  private _baseUrl: string = 'https://localhost:7078/api/v1/product';
+  private _baseUrl: string = `${environment.apiUrl}/product`;
 
   constructor(private _httpClient: HttpClient) {}
 
-  getProducts(): Observable<Product[]> {
-    return this._httpClient.get<Product[]>(this._baseUrl, this.options);
+  getProducts(
+    pageNumber: number,
+    pageSize: number
+  ): Observable<PaginatedResponse<Product>> {
+    let params: HttpParams = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
+    return this._httpClient.get<PaginatedResponse<Product>>(this._baseUrl, {
+      ...this.options,
+      params,
+    });
   }
 
   createProduct(product: Product) {

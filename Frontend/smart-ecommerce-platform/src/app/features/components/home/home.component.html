@@ -4,4 +4,13 @@
   <div class="products-container" >
     <smart-ecommerce-platform-product-card *ngFor="let product of products" [product]="product" (productUpdated)="onProductUpdated()"></smart-ecommerce-platform-product-card>
   </div>
+  <mat-paginator
+  #paginator
+  class="mat-paginator"
+  [length]="totalCount"
+  [pageSize]="5"
+  [pageSizeOptions]="[5, 10, 25]"
+  (page)="onPageChange($event)"
+>
+</mat-paginator>
 </div>

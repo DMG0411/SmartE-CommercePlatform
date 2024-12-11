@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import {
   ADD_EDIT_PRODUCT_MODAL_CONFIG,
   AddEditProductModalComponent,
@@ -17,7 +18,14 @@ import { EMPTY, finalize, Subscription, switchMap } from 'rxjs';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnDestroy {
+  @ViewChild('paginator') paginator: MatPaginator | undefined;
   isLoading: boolean = false;
+
+  pageNumber: number = 0;
+  pageSize: number = 5;
+  totalCount: number = 0;
+  products: Product[] = [];
+  paginatedProducts: Product[] = [];
 
   private _subs$: Subscription = new Subscription();
 
@@ -28,10 +36,8 @@ export class HomeComponent implements OnDestroy {
     private _errorHandlerService: ErrorHandlerService
   ) {}
 
-  products: Product[] = [];
-
   ngOnInit() {
-    this.getProducts();
+    this.onPageChange({ pageIndex: this.pageNumber, pageSize: this.pageSize });
   }
 
   ngOnDestroy(): void {
@@ -39,7 +45,7 @@ export class HomeComponent implements OnDestroy {
   }
 
   onProductUpdated(): void {
-    this.getProducts();
+    this.getProducts(this.pageNumber, this.pageSize);
   }
 
   openAddProductModal(): void {
@@ -65,7 +71,7 @@ export class HomeComponent implements OnDestroy {
         )
         .subscribe({
           next: () => {
-            this.getProducts();
+            this.getProducts(this.pageNumber, this.pageSize);
             this._toastrService.success('Product added successfully');
           },
           error: (error: HttpErrorResponse) => {
@@ -75,19 +81,34 @@ export class HomeComponent implements OnDestroy {
     );
   }
 
-  private getProducts(): void {
+  onPageChange(event: { pageIndex: number; pageSize: number }): void {
+    console.log(event);
+    this.pageNumber = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getProducts(event.pageIndex, event.pageSize);
+    const startIndex = event.pageIndex * event.pageSize;
+    const endIndex = startIndex + event.pageSize;
+    this.updatePaginatedProducts(startIndex, endIndex);
+  }
+
+  updatePaginatedProducts(startIndex: number, endIndex: number) {
+    this.paginatedProducts = this.products.slice(startIndex, endIndex);
+  }
+
+  private getProducts(pageNumber: number, pageSize: number): void {
     this.isLoading = true;
     this._subs$.add(
       this._productService
-        .getProducts()
+        .getProducts(pageNumber, pageSize)
         .pipe(
           finalize(() => {
             this.isLoading = false;
           })
         )
         .subscribe({
-          next: (products) => {
-            this.products = products;
+          next: (response) => {
+            this.products = response.data;
+            this.totalCount = response.totalItems;
           },
           error: (error: HttpErrorResponse) => {
             this._errorHandlerService.handleError(error);
