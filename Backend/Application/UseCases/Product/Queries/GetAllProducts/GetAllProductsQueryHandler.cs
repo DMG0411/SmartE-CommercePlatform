@@ -25,7 +25,6 @@ namespace Application.UseCases.Product.Queries.GetAllProducts
 
         public async Task<PagedResult<ProductDTO>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            // Validate the query
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {

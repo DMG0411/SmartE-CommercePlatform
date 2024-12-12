@@ -27,21 +27,14 @@ namespace Application.UseCases.Product.Commands.CreateProduct
 
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            // Validate the command
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                // Optionally, log the validation failures here
-                // For example: _logger.LogWarning("Invalid CreateProductCommand: {Errors}", validationResult.Errors);
-
-                // Return Guid.Empty to indicate failure
                 return Guid.Empty;
             }
 
-            // Map DTO to domain entity
             var productEntity = _mapper.Map<Domain.Entities.Product>(request.Product);
 
-            // Add the product to the repository and get the generated Guid
             var createdProductId = await _repository.CreateProduct(productEntity);
 
             return createdProductId;
