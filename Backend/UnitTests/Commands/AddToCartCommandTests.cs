@@ -1,47 +1,71 @@
 ﻿using Application.UseCases.Cart.Commands.AddToCart;
 using Domain.Repositories;
+using FluentValidation;
+using FluentValidation.Results;
 using NSubstitute;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace UnitTests.Commands
 {
     public class AddToCartCommandTests
     {
-        private readonly ICartRepository cartRepository;
+        private readonly ICartRepository _cartRepository;
+        private readonly IValidator<AddToCartCommand> _validator;
+        private readonly AddToCartCommandHandler _handler;
 
         public AddToCartCommandTests()
         {
-            cartRepository = Substitute.For<ICartRepository>();
+            _cartRepository = Substitute.For<ICartRepository>();
+
+            _validator = Substitute.For<IValidator<AddToCartCommand>>();
+
+            _handler = new AddToCartCommandHandler(_cartRepository, _validator);
         }
 
         [Fact]
-        public async void AddToCartCommand_ValidCommand_ShouldPass()
+        public async Task AddToCartCommand_ValidCommand_ShouldCallAddToCartOnce()
         {
             // Arrange
             var userId = Guid.NewGuid();
             var productId = Guid.NewGuid();
             var command = new AddToCartCommand(userId, productId);
-            var handler = new AddToCartCommandHandler(cartRepository);
+
+            _validator.ValidateAsync(command, Arg.Any<CancellationToken>())
+                      .Returns(Task.FromResult(new ValidationResult()));
 
             // Act
-            await handler.Handle(command, CancellationToken.None);
+            await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            await cartRepository.Received(1).AddToCart(userId, productId);
+            await _cartRepository.Received(1).AddToCart(userId, productId);
         }
 
-        //[Fact]
-        //public async void AddToCartCommand_InvalidCommand_ShouldFail()
-        //{
-        //    // Arrange
-        //    var userId = Guid.Empty;
-        //    var productId = Guid.Empty;
-        //    var command = new AddToCartCommand(userId, productId);
-        //    var handler = new AddToCartCommandHandler(cartRepository);
+        [Fact]
+        public async Task AddToCartCommand_InvalidCommand_ShouldNotCallAddToCart()
+        {
+            // Arrange
+            var userId = Guid.Empty; 
+            var productId = Guid.Empty; 
+            var command = new AddToCartCommand(userId, productId);
 
-        //    // Act & Assert
-        //    await handler.Handle(command, CancellationToken.None);
-        //    await cartRepository.Received(0).AddToCart(userId, productId); 
-        //}
+            var failures = new[]
+            {
+                new ValidationFailure("UserId", "User ID must not be empty."),
+                new ValidationFailure("ProductId", "Product ID must not be empty.")
+            };
+            var validationResult = new ValidationResult(failures);
+
+            _validator.ValidateAsync(command, Arg.Any<CancellationToken>())
+                      .Returns(Task.FromResult(validationResult));
+
+            // Act
+            await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            await _cartRepository.DidNotReceive().AddToCart(userId, productId);
+        }
     }
 }

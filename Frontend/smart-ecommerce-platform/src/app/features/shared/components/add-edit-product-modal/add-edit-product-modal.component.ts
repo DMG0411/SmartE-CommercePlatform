@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Types } from '@app/features/constants';
 import { Product } from '@app/features/models';
 
 @Component({
@@ -20,6 +21,8 @@ export class AddEditProductModalComponent {
     review: new FormControl('', [Validators.required]),
   });
   modalTitle: string = '';
+  typesDropdownSource: Types[] = Object.values(Types);
+  
   constructor(
     private _dialogRef: MatDialogRef<AddEditProductModalComponent>,
     @Inject(MAT_DIALOG_DATA)

@@ -1,20 +1,35 @@
-﻿using Domain.Repositories;
+﻿using FluentValidation;
 using MediatR;
+using Domain.Repositories;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.UseCases.Cart.Commands.RemoveFromCart
 {
-    public class RemoveFromCartCommandHandler: IRequestHandler<RemoveFromCartCommand>
+    public class RemoveFromCartCommandHandler : IRequestHandler<RemoveFromCartCommand, Unit>
     {
-        private readonly ICartRepository cartRepository;
+        private readonly ICartRepository _cartRepository;
+        private readonly IValidator<RemoveFromCartCommand> _validator;
 
-        public RemoveFromCartCommandHandler(ICartRepository cartRepository)
+        public RemoveFromCartCommandHandler(ICartRepository cartRepository, IValidator<RemoveFromCartCommand> validator)
         {
-            this.cartRepository = cartRepository;
+            _cartRepository = cartRepository;
+            _validator = validator;
         }
 
-        public async Task Handle(RemoveFromCartCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RemoveFromCartCommand request, CancellationToken cancellationToken)
         {
-            await cartRepository.RemoveFromCart(request.UserId, request.ProductId);
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException($"Invalid RemoveFromCartCommand: {errors}");
+            }
+
+            await _cartRepository.RemoveFromCart(request.UserId, request.ProductId);
+
+            return Unit.Value;
         }
     }
 }

@@ -7,6 +7,7 @@ import {
   AddEditProductModalComponent,
   Product,
 } from '@app/features';
+import { Types } from '@app/features/constants';
 import { ProductService } from '@app/features/services';
 import { ErrorHandlerService } from '@app/shared';
 import { ToastrService } from 'ngx-toastr';
@@ -26,6 +27,7 @@ export class HomeComponent implements OnDestroy {
   totalCount: number = 0;
   products: Product[] = [];
   paginatedProducts: Product[] = [];
+  typesDropdownSource: Types[] = Object.values(Types);
 
   private _subs$: Subscription = new Subscription();
 
@@ -47,6 +49,7 @@ export class HomeComponent implements OnDestroy {
   onProductUpdated(): void {
     this.getProducts(this.pageNumber, this.pageSize);
   }
+
 
   openAddProductModal(): void {
     this._subs$.add(
