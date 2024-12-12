@@ -4,143 +4,219 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Repositories;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using NSubstitute;
 using Xunit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace UnitTests.Queries
 {
-    public class GetAllProductsQueryTests
+    public class GetAllProductsQueryHandlerTests
     {
-        private readonly IProductRepository repository;
-        private readonly IMapper mapper;
+        private readonly IProductRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly IValidator<GetAllProductsQuery> _validator;
+        private readonly GetAllProductsQueryHandler _handler;
 
-        public GetAllProductsQueryTests()
+        public GetAllProductsQueryHandlerTests()
         {
-            repository = Substitute.For<IProductRepository>();
-            mapper = Substitute.For<IMapper>();
+            _repository = Substitute.For<IProductRepository>();
+
+            _mapper = Substitute.For<IMapper>();
+
+            _validator = Substitute.For<IValidator<GetAllProductsQuery>>();
+
+            _handler = new GetAllProductsQueryHandler(_repository, _mapper, _validator);
         }
 
-        //[Fact]
-        //public async Task GetAllProductsQuery_ShouldReturnListOfProducts()
-        //{
-        //    // Arrange
-        //    List<Product> products = GenerateProduct();
-        //    repository.GetFilteredProducts(null, null, null, null).Returns(products);
+        public static IEnumerable<object[]> GetFilteredProductsData =>
+            new List<object[]>
+            {
+                new object[] { "Electronics", (decimal?)100.00m, (decimal?)1500.00m, (int?)4 },
+                new object[] { "Books", null, (decimal?)50.00m, null },
+                new object[] { null, (decimal?)20.00m, null, (int?)2 },
+            };
 
-        //    var query = new GetAllProductsQuery(null, null, null, null);
-        //    GenerateProductDTO(products);
-        //    var handler = new GetAllProductsQueryHandler(repository, mapper);
-
-        //    // Act
-        //    var result = await handler.Handle(query, CancellationToken.None);
-
-        //    // Assert
-        //    result.Should().NotBeNull();
-        //    result.Data.Should().HaveCount(products.Count);
-        //    result.Data.First().Id.Should().Be(products.First().Id);
-        //    result.Data.First().Name.Should().Be(products.First().Name);
-        //    result.Data.First().Type.Should().Be(products.First().Type);
-        //    result.Data.First().Description.Should().Be(products.First().Description);
-        //    result.Data.First().Price.Should().Be(products.First().Price);
-        //    result.Data.First().Review.Should().Be(products.First().Review);
-        //    result.Data.Last().Id.Should().Be(products.Last().Id);
-        //    result.Data.Last().Name.Should().Be(products.Last().Name);
-        //    result.Data.Last().Type.Should().Be(products.Last().Type);
-        //    result.Data.Last().Description.Should().Be(products.Last().Description);
-        //    result.Data.Last().Price.Should().Be(products.Last().Price);
-        //    result.Data.Last().Review.Should().Be(products.Last().Review);
-
-        //    mapper.Received(1).Map<IEnumerable<ProductDTO>>(products);
-        //}
-
-        //[Fact]
-        //public async Task GetAllProductsQuery_ShouldReturnEmptyList_WhenNoProductsExist()
-        //{
-        //    // Arrange
-        //    List<Product> products = new List<Product>();
-        //    repository.GetFilteredProducts(null, null, null, null).Returns(products);
-
-        //    var query = new GetAllProductsQuery(null, null, null, null);
-        //    GenerateProductDTO(products);
-        //    var handler = new GetAllProductsQueryHandler(repository, mapper);
-
-        //    // Act
-        //    var result = await handler.Handle(query, CancellationToken.None);
-
-        //    // Assert
-        //    result.Should().NotBeNull();
-        //    result.Data.Should().BeEmpty();
-
-        //    mapper.Received(1).Map<IEnumerable<ProductDTO>>(products);
-        //}
-
-        //[Theory]
-        //[InlineData("Electronics", 100.00, 500.00, 4)]
-        //[InlineData("Books", null, 50.00, null)]
-        //[InlineData(null, 20.00, null, 2)]
-        //public async Task GetAllProductsQuery_ShouldReturnFilteredProducts(string? type, decimal? minPrice, decimal? maxPrice, int? minReview)
-        //{
-        //    // Arrange
-        //    var products = new List<Product>
-        //    {
-        //        new(Guid.NewGuid(), "Electronics", "Laptop", "High-end laptop", 1500.00m, 5),
-        //        new(Guid.NewGuid(), "Electronics", "Smartphone", "Latest smartphone", 800.00m, 4),
-        //        new(Guid.NewGuid(), "Books", "C# Programming", "Learn C#", 45.00m, 3)
-        //    };
-
-        //    repository.GetFilteredProducts(type, minPrice, maxPrice, minReview).Returns(
-        //        products.Where(p =>
-        //            (type == null || p.Type == type) &&
-        //            (!minPrice.HasValue || p.Price >= minPrice.Value) &&
-        //            (!maxPrice.HasValue || p.Price <= maxPrice.Value) &&
-        //            (!minReview.HasValue || p.Review >= minReview.Value)
-        //        ).ToList()
-        //    );
-
-        //    var query = new GetAllProductsQuery(type, minPrice, maxPrice, minReview);
-        //    var filteredProducts = products.Where(p =>
-        //        (type == null || p.Type == type) &&
-        //        (!minPrice.HasValue || p.Price >= minPrice.Value) &&
-        //        (!maxPrice.HasValue || p.Price <= maxPrice.Value) &&
-        //        (!minReview.HasValue || p.Review >= minReview.Value)
-        //    ).ToList();
-        //    GenerateProductDTO(filteredProducts);
-        //    var handler = new GetAllProductsQueryHandler(repository, mapper);
-
-        //    // Act
-        //    var result = await handler.Handle(query, CancellationToken.None);
-
-        //    // Assert
-        //    result.Should().NotBeNull();
-        //    result.Data.Should().HaveCount(products.Count); ;
-        //    foreach (var dto in result.Data)
-        //    {
-        //        var product = filteredProducts.FirstOrDefault(p => p.Id == dto.Id);
-        //        product.Should().NotBeNull();
-        //        dto.Name.Should().Be(product.Name);
-        //        dto.Type.Should().Be(product.Type);
-        //        dto.Price.Should().Be(product.Price);
-        //        dto.Review.Should().Be(product.Review);
-        //    }
-
-        //    mapper.Received(1).Map<IEnumerable<ProductDTO>>(Arg.Is<IEnumerable<Product>>(p => p.SequenceEqual(filteredProducts)));
-
-        //}
-
-        private void GenerateProductDTO(List<Product> products)
+        [Fact]
+        public async Task GetAllProductsQuery_ShouldReturnListOfProducts()
         {
-            mapper.Map<IEnumerable<ProductDTO>>(Arg.Any<IEnumerable<Product>>()).Returns(products.Select(p =>
-                new ProductDTO(p.Id, p.Type, p.Name, p.Description, p.Price, p.Review)).ToList()
-            );
+            // Arrange
+            var products = GenerateProducts();
+            _repository.GetAllProducts().Returns(products);
+
+            var query = new GetAllProductsQuery(null, null, null, null, 0, 10);
+            var productDTOs = GenerateProductDTOs(products);
+
+            _mapper.Map<IEnumerable<ProductDTO>>(Arg.Any<IEnumerable<Product>>()).Returns(productDTOs);
+
+            _validator.ValidateAsync(query, Arg.Any<CancellationToken>())
+                      .Returns(Task.FromResult(new ValidationResult()));
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Data.Should().HaveCount(products.Count);
+            result.TotalItems.Should().Be(products.Count);
+            result.PageNumber.Should().Be(0);
+            result.PageSize.Should().Be(10);
+
+            for (int i = 0; i < products.Count; i++)
+            {
+                var dto = result.Data.ElementAt(i);
+                var product = products[i];
+                dto.Id.Should().Be(product.Id);
+                dto.Name.Should().Be(product.Name);
+                dto.Type.Should().Be(product.Type);
+                dto.Description.Should().Be(product.Description);
+                dto.Price.Should().Be(product.Price);
+                dto.Review.Should().Be(product.Review);
+            }
+
+            _mapper.Received(1).Map<IEnumerable<ProductDTO>>(Arg.Any<IEnumerable<Product>>());
         }
 
-        private List<Product> GenerateProduct()
+        [Fact]
+        public async Task GetAllProductsQuery_ShouldReturnEmptyList_WhenNoProductsExist()
+        {
+            // Arrange
+            var products = new List<Product>();
+            _repository.GetAllProducts().Returns(products);
+
+            var query = new GetAllProductsQuery(null, null, null, null, 0, 10);
+            var productDTOs = new List<ProductDTO>();
+
+            _mapper.Map<IEnumerable<ProductDTO>>(Arg.Any<IEnumerable<Product>>()).Returns(productDTOs);
+
+            _validator.ValidateAsync(query, Arg.Any<CancellationToken>())
+                      .Returns(Task.FromResult(new ValidationResult()));
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Data.Should().BeEmpty();
+            result.TotalItems.Should().Be(0);
+            result.PageNumber.Should().Be(0);
+            result.PageSize.Should().Be(10);
+
+            _mapper.Received(1).Map<IEnumerable<ProductDTO>>(Arg.Any<IEnumerable<Product>>());
+        }
+
+        [Theory]
+        [MemberData(nameof(GetFilteredProductsData))]
+        public async Task GetAllProductsQuery_ShouldReturnFilteredProducts(string? type, decimal? minPrice, decimal? maxPrice, int? minReview)
+        {
+            // Arrange
+            var allProducts = GenerateProducts();
+            _repository.GetAllProducts().Returns(allProducts);
+
+            var query = new GetAllProductsQuery(type, minPrice, maxPrice, minReview, 0, 10);
+
+            var filteredProducts = allProducts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(type))
+                filteredProducts = filteredProducts.Where(p => p.Type == type);
+
+            if (minPrice.HasValue)
+                filteredProducts = filteredProducts.Where(p => p.Price >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                filteredProducts = filteredProducts.Where(p => p.Price <= maxPrice.Value);
+
+            if (minReview.HasValue)
+                filteredProducts = filteredProducts.Where(p => p.Review >= minReview.Value);
+
+            var finalFilteredList = filteredProducts.ToList();
+
+            // Apply pagination
+            var pagedProducts = finalFilteredList
+                .Skip(query.PageNumber * query.PageSize)
+                .Take(query.PageSize)
+                .ToList();
+
+            var productDTOs = GenerateProductDTOs(pagedProducts);
+
+            _mapper.Map<IEnumerable<ProductDTO>>(Arg.Any<IEnumerable<Product>>()).Returns(productDTOs);
+
+            _validator.ValidateAsync(query, Arg.Any<CancellationToken>())
+                      .Returns(Task.FromResult(new ValidationResult()));
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Data.Should().HaveCount(pagedProducts.Count);
+            result.TotalItems.Should().Be(finalFilteredList.Count);
+            result.PageNumber.Should().Be(0);
+            result.PageSize.Should().Be(10);
+
+            for (int i = 0; i < pagedProducts.Count; i++)
+            {
+                var dto = result.Data.ElementAt(i);
+                var product = pagedProducts[i];
+                dto.Id.Should().Be(product.Id);
+                dto.Name.Should().Be(product.Name);
+                dto.Type.Should().Be(product.Type);
+                dto.Description.Should().Be(product.Description);
+                dto.Price.Should().Be(product.Price);
+                dto.Review.Should().Be(product.Review);
+            }
+
+            _mapper.Received(1).Map<IEnumerable<ProductDTO>>(Arg.Any<IEnumerable<Product>>());
+        }
+
+        [Fact]
+        public async Task GetAllProductsQuery_InvalidQuery_ShouldThrowException_AndNotCallRepository()
+        {
+            // Arrange
+            var query = new GetAllProductsQuery(null, -10.00m, 5.00m, 6, 0, 10); // Invalid MinPrice and MinReview
+
+            var failures = new[]
+            {
+                new ValidationFailure("MinPrice", "MinPrice must be greater than or equal to zero."),
+                new ValidationFailure("MinReview", "MinReview must be between 0 and 5.")
+            };
+            var validationResult = new ValidationResult(failures);
+            _validator.ValidateAsync(query, Arg.Any<CancellationToken>())
+                      .Returns(Task.FromResult(validationResult));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(async () =>
+                await _handler.Handle(query, CancellationToken.None));
+
+            exception.Message.Should().Contain("Invalid GetAllProductsQuery");
+            exception.Message.Should().Contain("MinPrice must be greater than or equal to zero.");
+            exception.Message.Should().Contain("MinReview must be between 0 and 5.");
+
+            await _repository.DidNotReceive().GetAllProducts();
+        }
+
+        private List<Product> GenerateProducts()
         {
             return new List<Product>
             {
-                new(Guid.NewGuid(), "Type", "Product 1", "Description", 10.22m, 3),
-                new(Guid.NewGuid(), "Type", "Product 2", "Description", 10.22m, 3)
+                new(Guid.NewGuid(), "Electronics", "Laptop", "High-end laptop", 1500.00m, 5),
+                new(Guid.NewGuid(), "Electronics", "Smartphone", "Latest smartphone", 800.00m, 4),
+                new(Guid.NewGuid(), "Books", "C# Programming", "Learn C#", 45.00m, 3),
+                new(Guid.NewGuid(), "Books", "ASP.NET Core", "Web development", 55.00m, 4),
+                new(Guid.NewGuid(), "Electronics", "Headphones", "Noise-cancelling", 200.00m, 4)
             };
+        }
+
+        private List<ProductDTO> GenerateProductDTOs(IEnumerable<Product> products)
+        {
+            return products.Select(p =>
+                new ProductDTO(p.Id, p.Type, p.Name, p.Description, p.Price, p.Review)
+            ).ToList();
         }
     }
 }
