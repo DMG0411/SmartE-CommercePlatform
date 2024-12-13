@@ -1,6 +1,11 @@
 <smart-ecommerce-platform-loader *ngIf="isLoading"></smart-ecommerce-platform-loader>
 <div class="register-container">
+  <div class="header">
+  <span class="material-icons" (click)="redirectToLogin()">
+    arrow_back_ios_new
+    </span>
   <h2>Register</h2>
+</div>
   <form [formGroup]="registerForm">
   <input formControlName="username" type="text" placeholder="Username" required>
   <input formControlName="password" type="password" placeholder="Password" required>

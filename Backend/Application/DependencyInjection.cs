@@ -1,4 +1,5 @@
-﻿using Application.Utils;
+﻿using FluentValidation;
+using Application.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -12,6 +13,9 @@ namespace Application
                 cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
             services.AddAutoMapper(typeof(MappingProfile));
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
 
             return services;
         }

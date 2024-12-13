@@ -1,9 +1,9 @@
 <smart-ecommerce-platform-loader *ngIf="isLoading"></smart-ecommerce-platform-loader>
 <div class="login-container">
   <h2>Login</h2>
-  <form [formGroup]="loginForm">
-  <input formControlName="email" type="text" placeholder="Email address" required>
-  <input formControlName="password" type="password" placeholder="Password" required>
+  <form [formGroup]="loginForm" (keyup.enter)="loginUser()">
+  <input formControlName="email" type="text" placeholder="Email address" autocomplete="email" required>
+  <input formControlName="password" type="password" placeholder="Password" autocomplete="current-password" required>
 </form>
   <button [disabled]="loginForm.invalid" (click)="loginUser()">Login</button>
   <p>No account? 

@@ -37,6 +37,10 @@ export class RegisterComponent implements OnDestroy {
     this._subs$.unsubscribe();
   }
 
+  redirectToLogin(): void {
+    this._router.navigate(['/login']);
+  }
+
   registerUser(): void {
     this.isLoading = true;
     this._subs$.add(

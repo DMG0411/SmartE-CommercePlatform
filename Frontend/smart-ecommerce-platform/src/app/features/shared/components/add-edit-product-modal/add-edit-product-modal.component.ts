@@ -17,12 +17,18 @@ export class AddEditProductModalComponent {
       Validators.required,
       Validators.minLength(10),
     ]),
-    price: new FormControl('', [Validators.required]),
-    review: new FormControl('', [Validators.required]),
+    price: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^\d+(\.\d+)?$/),
+    ]),
+    review: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[1-5]$/),
+    ]),
   });
   modalTitle: string = '';
   typesDropdownSource: Types[] = Object.values(Types);
-  
+
   constructor(
     private _dialogRef: MatDialogRef<AddEditProductModalComponent>,
     @Inject(MAT_DIALOG_DATA)
@@ -37,14 +43,16 @@ export class AddEditProductModalComponent {
   isFormInvalid(): boolean {
     return (
       this.addProductForm.invalid ||
-      !(
-        this._data?.product.name === this.addProductForm.get('name')?.value &&
-        this._data?.product.type === this.addProductForm.get('type')?.value &&
-        this._data?.product.description ===
-          this.addProductForm.get('description')?.value &&
-        this._data?.product.price === this.addProductForm.get('price')?.value &&
-        this._data?.product.review === this.addProductForm.get('review')?.value
-      )
+      (this._data?.product?.name ===
+        this.addProductForm.controls['name'].value &&
+        this._data?.product?.type ===
+          this.addProductForm.controls['type']?.value &&
+        this._data?.product?.description ===
+          this.addProductForm.controls['description']?.value &&
+        this._data?.product?.price ===
+          this.addProductForm.controls['price']?.value &&
+        this._data?.product?.review ===
+          this.addProductForm.controls['review']?.value)
     );
   }
 
@@ -56,13 +64,18 @@ export class AddEditProductModalComponent {
     this._dialogRef.close(null);
   }
 
+  isControlInvalid(controlName: string): boolean {
+    return (this.addProductForm.controls[controlName]?.invalid &&
+      this.addProductForm.controls[controlName]?.touched)!;
+  }
+
   private getFormData(): Product {
     return {
-      name: this.addProductForm.get('name')?.value,
-      type: this.addProductForm.get('type')?.value,
-      description: this.addProductForm.get('description')?.value,
-      price: Number(this.addProductForm.get('price')?.value),
-      review: Number(this.addProductForm.get('review')?.value),
+      name: this.addProductForm.controls['name']?.value,
+      type: this.addProductForm.controls['type']?.value,
+      description: this.addProductForm.controls['description']?.value,
+      price: Number(this.addProductForm.controls['price']?.value),
+      review: Number(this.addProductForm.controls['review']?.value),
     };
   }
 }

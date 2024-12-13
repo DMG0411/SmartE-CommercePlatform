@@ -59,7 +59,7 @@
     }
 
     input[type="text"],
-    textarea { 
+    textarea {
       width: 100%;
       max-width: 500px;
       padding: 0.75rem;
@@ -69,8 +69,8 @@
       background-color: #f9f9f9;
       transition: border-color 0.3s;
       box-sizing: border-box;
-      cursor: text; 
-      font-family: Arial, sans-serif; 
+      cursor: text;
+      font-family: Arial, sans-serif;
     }
 
     input[type="text"]:focus,
@@ -85,7 +85,7 @@
       resize: vertical;
     }
 
-    select#type { 
+    select#type {
       width: 100%;
       max-width: 500px;
       padding: 0.75rem;
@@ -95,7 +95,7 @@
       background-color: #f9f9f9;
       transition: border-color 0.3s;
       box-sizing: border-box;
-      appearance: none; 
+      appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
       background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="7"><path fill="%23999" d="M0 0l5 5 5-5z"/></svg>');
@@ -103,7 +103,7 @@
       background-position: right 10px center;
       background-size: 10px 7px;
       cursor: pointer;
-      font-family: Arial, sans-serif; 
+      font-family: Arial, sans-serif;
 
       &:focus {
         border-color: #007bff;
@@ -115,14 +115,10 @@
         border-color: #ccc;
       }
     }
-
   }
 
-  .warning-text {
-    font-size: 0.9rem;
-    color: #e74c3c;
-    text-align: center;
-    margin-top: 1rem;
+  .error {
+    color: #e21d09;
   }
 
   .modal-footer {
@@ -173,7 +169,7 @@
     .form-group {
       input[type="text"],
       textarea,
-      select#type { 
+      select#type {
         max-width: 100%;
       }
     }

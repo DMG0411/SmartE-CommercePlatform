@@ -1,4 +1,9 @@
 using Application;
+using Application.UseCases.Cart.Commands.RemoveFromCart;
+using Application.UseCases.Cart.Queries.GetCartById;
+using Application.UseCases.Product.Commands.CreateProduct;
+using Application.UseCases.Product.Queries.GetAllProducts;
+using Application.UseCases.User.Commands.CreateUser;
 using Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using SmartE_commercePlatform.Helpers;

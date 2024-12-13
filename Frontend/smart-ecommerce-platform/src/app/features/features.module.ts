@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from '@app/shared';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,8 @@ import { MatTableModule } from '@angular/material/table';
     SharedModule,
     MatPaginatorModule,
     MatTableModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
   providers: [],
 })

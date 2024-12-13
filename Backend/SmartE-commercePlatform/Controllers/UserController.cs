@@ -40,7 +40,6 @@ namespace SmartE_commercePlatform.Controllers
             Response.Headers.Append("Authorization", $"Bearer {tokenSerializer.CreateToken(userResponse)}");
 
             return Ok();
-
         }
 
         [HttpGet("checkToken")]

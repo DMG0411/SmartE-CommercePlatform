@@ -15,9 +15,9 @@ export class ErrorHandlerService {
       this._router.navigate(['/login']);
     } else {
       this._toastrService.error(
-        error.error.substring(
+        error.error?.substring(
           0,
-          error.error.indexOf('.', error.error.indexOf('.') + 1)
+          error.error?.indexOf('.', error.error.indexOf('.') + 1)
         ) || 'Unexpected error occurred.'
       );
     }

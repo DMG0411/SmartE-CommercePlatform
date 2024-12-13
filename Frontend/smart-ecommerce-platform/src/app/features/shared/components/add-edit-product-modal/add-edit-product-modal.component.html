@@ -8,7 +8,7 @@
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" id="name" formControlName="name" />
-        <div *ngIf="addProductForm.get('name')?.invalid && addProductForm.get('name')?.touched" class="error">
+        <div *ngIf="isControlInvalid('name')" class="error">
           Name is required.
         </div>
       </div>
@@ -19,7 +19,7 @@
           <option value="" disabled>Select product type</option>
           <option *ngFor="let type of typesDropdownSource" [value]="type">{{ type }}</option>
         </select>
-        <div *ngIf="addProductForm.get('type')?.invalid && addProductForm.get('type')?.touched" class="error">
+        <div *ngIf="isControlInvalid('type')" class="error">
           Type is required.
         </div>
       </div>
@@ -27,17 +27,23 @@
       <div class="form-group">
         <label for="description">Description</label>
         <textarea id="description" name="description" formControlName="description"></textarea>
+        <div *ngIf="isControlInvalid('description')" class="error">
+          Enter a valid description.
+        </div>
       </div>
       <div class="form-group">
         <label for="price">Price</label>
-        <input type="text" id="price" name="price" formControlName="price" />
-        <div *ngIf="addProductForm.get('price')?.invalid && addProductForm.get('price')?.touched" class="error">
+        <input type="text" id="price" name="price" formControlName="price" mask="separator.2" />
+        <div *ngIf="isControlInvalid('price')" class="error">
           Valid price is required.
         </div>
       </div>
       <div class="form-group">
         <label for="review">Review</label>
-        <input type="text" id="review" name="review" formControlName="review" />
+        <input type="text" id="review" name="review" formControlName="review" mask="0"/>
+        <div *ngIf="isControlInvalid('review')" class="error">
+         Enter a valid review.
+        </div>
       </div>
     </form>
   </div>

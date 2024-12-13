@@ -52,7 +52,11 @@ export class LoginComponent implements OnDestroy {
             this._toastrService.success('Login successful');
           },
           error: (error: HttpErrorResponse) => {
-            this._errorHandlerService.handleError(error);
+            if (error.status === 404) {
+              this._toastrService.error('Email or password are incorrect');
+            } else {
+              this._errorHandlerService.handleError(error);
+            }
           },
         })
     );
