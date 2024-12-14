@@ -1,6 +1,6 @@
 import { AddEditProductModalComponent } from './add-edit-product-modal.component';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Product } from '@app/features/models';
 
 describe('AddEditProductModalComponent', () => {
@@ -28,11 +28,20 @@ describe('AddEditProductModalComponent', () => {
     );
 
     component.addProductForm = new FormGroup({
-      name: new FormControl(mockData.product?.name),
-      type: new FormControl(mockData.product?.type),
-      description: new FormControl(mockData.product?.description),
-      price: new FormControl(mockData.product?.price),
-      review: new FormControl(mockData.product?.review),
+      name: new FormControl(mockData.product?.name, [Validators.required]),
+      type: new FormControl(mockData.product?.type, [Validators.required]),
+      description: new FormControl(mockData.product?.description, [
+        Validators.required,
+        Validators.minLength(10),
+      ]),
+      price: new FormControl(mockData.product?.price, [
+        Validators.required,
+        Validators.pattern(/^\d+(\.\d+)?$/),
+      ]),
+      review: new FormControl(mockData.product?.review, [
+        Validators.required,
+        Validators.pattern(/^[1-5]$/),
+      ]),
     });
   });
 
@@ -77,13 +86,27 @@ describe('AddEditProductModalComponent', () => {
     });
   });
 
+  it('should check if form data matches product data', () => {
+    component.addProductForm.patchValue({
+      name: 'Test Product',
+      type: 'Test Type',
+      description: 'Test Description',
+      price: 100,
+      review: 2,
+    });
+    expect(component.isFormInvalid()).toBe(false);
+
+    component.addProductForm.patchValue({ name: 'Changed Product' });
+    expect(component.isFormInvalid()).toBe(true);
+  });
+
   it('should return true if form is invalid', () => {
     component.addProductForm.patchValue({
       name: '',
       type: '',
-      description: '',
-      price: '',
-      review: '',
+      description: 'short',
+      price: 'invalid_price',
+      review: '6',
     });
     expect(component.isFormInvalid()).toBe(true);
   });
@@ -93,8 +116,8 @@ describe('AddEditProductModalComponent', () => {
       name: mockData.product?.name,
       type: mockData.product?.type,
       description: mockData.product?.description,
-      price: mockData.product?.price,
-      review: mockData.product?.review,
+      price: mockData.product?.price?.toString(),
+      review: mockData.product?.review?.toString(),
     });
     expect(component.isFormInvalid()).toBe(false);
   });
@@ -103,10 +126,22 @@ describe('AddEditProductModalComponent', () => {
     component.addProductForm.patchValue({
       name: 'Different Product',
       type: 'Different Type',
-      description: 'Different description',
-      price: 200,
-      review: 4,
+      description: 'A completely different valid description',
+      price: '200',
+      review: '4',
     });
     expect(component.isFormInvalid()).toBe(true);
+  });
+
+  it('should return true if control is invalid and touched', () => {
+    component.addProductForm.controls['name'].markAsTouched();
+    component.addProductForm.controls['name'].setValue('');
+    expect(component.isControlInvalid('name')).toBe(true);
+  });
+
+  it('should return false if control is valid and touched', () => {
+    component.addProductForm.controls['name'].markAsTouched();
+    component.addProductForm.controls['name'].setValue('Valid Name');
+    expect(component.isControlInvalid('name')).toBe(false);
   });
 });
