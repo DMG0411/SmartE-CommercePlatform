@@ -20,7 +20,11 @@ export class UserService {
 
   private _baseUrl: string = `${environment.apiUrl}/user`;
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(private _httpClient: HttpClient) {
+    if (localStorage.getItem('token') !== null) {
+      this.userLoggedIn$.next(true);
+    }
+  }
 
   loginUser(user: User): Observable<void> {
     return this._httpClient

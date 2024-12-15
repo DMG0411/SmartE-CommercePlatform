@@ -91,8 +91,8 @@ describe('AddEditProductModalComponent', () => {
       name: 'Test Product',
       type: 'Test Type',
       description: 'Test Description',
-      price: 100,
-      review: 2,
+      price: '100',
+      review: '2',
     });
     expect(component.isFormInvalid()).toBe(false);
 

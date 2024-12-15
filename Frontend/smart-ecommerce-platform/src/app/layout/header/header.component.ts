@@ -6,7 +6,7 @@ import { Product } from '@app/features';
 import { CartService } from '@app/features/services';
 import { ErrorHandlerService } from '@app/shared';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
+import { filter, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'smart-ecommerce-platform-header',
@@ -66,14 +66,19 @@ export class HeaderComponent implements OnDestroy {
 
   private initSubscriptions(): void {
     this._subs$.add(
-      this._userService.getUserDetails().subscribe({
-        next: (user) => {
-          this.username = user.username!;
-        },
-        error: (error: HttpErrorResponse) => {
-          this._errorHandlerService.handleError(error);
-        },
-      })
+      this._userService.userLoggedIn$
+        .pipe(
+          filter((value) => value),
+          switchMap(() => this._userService.getUserDetails())
+        )
+        .subscribe({
+          next: (user) => {
+            this.username = user.username!;
+          },
+          error: (error: HttpErrorResponse) => {
+            this._errorHandlerService.handleError(error);
+          },
+        })
     );
     this._subs$.add(
       this._cartService.cartUpdated$.subscribe(() => {

@@ -41,18 +41,23 @@ export class AddEditProductModalComponent {
   }
 
   isFormInvalid(): boolean {
+    if (this.addProductForm.invalid) {
+      return true;
+    }
+
+    if (!this._data?.product) {
+      return false;
+    }
+
     return (
-      this.addProductForm.invalid ||
-      this._data?.product?.name ===
-        this.addProductForm.controls['name'].value ||
-      this._data?.product?.type ===
-        this.addProductForm.controls['type']?.value ||
-      this._data?.product?.description ===
-        this.addProductForm.controls['description']?.value ||
-      this._data?.product?.price ===
-        this.addProductForm.controls['price']?.value ||
-      this._data?.product?.review ===
-        this.addProductForm.controls['review']?.value
+      this.addProductForm.controls['name'].value !== this._data.product.name ||
+      this.addProductForm.controls['type'].value !== this._data.product.type ||
+      this.addProductForm.controls['description'].value !==
+        this._data.product.description ||
+      Number(this.addProductForm.controls['price'].value) !==
+        this._data.product.price ||
+      Number(this.addProductForm.controls['review'].value) !==
+        this._data.product.review
     );
   }
 
