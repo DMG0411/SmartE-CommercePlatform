@@ -3,7 +3,7 @@ name: Build and deploy .NET Core application to Web App SmartE-commercePlatform 
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   AZURE_WEBAPP_NAME: SmartE-commercePlatform
