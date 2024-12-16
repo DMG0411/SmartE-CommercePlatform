@@ -10,11 +10,7 @@ import { FeaturesModule } from './features';
 import { CoreModule } from './core';
 import { SharedModule } from './shared';
 import { ToastrModule } from 'ngx-toastr';
-import {
-  NgxMaskDirective,
-  NgxMaskPipe,
-  provideEnvironmentNgxMask,
-} from 'ngx-mask';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 const SMART_E_COMMERCE_PLATORM_MODULES: any[] = [
   LayoutModule,
@@ -35,7 +31,7 @@ const SMART_E_COMMERCE_PLATORM_MODULES: any[] = [
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    SMART_E_COMMERCE_PLATORM_MODULES,
+    ...SMART_E_COMMERCE_PLATORM_MODULES,
   ],
   providers: [provideEnvironmentNgxMask()],
   bootstrap: [AppComponent],

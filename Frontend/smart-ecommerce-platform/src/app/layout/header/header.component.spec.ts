@@ -4,6 +4,7 @@ import { CartService } from '@app/features/services';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorHandlerService } from '@app/shared';
+import { MatDialog } from '@angular/material/dialog';
 import { of, throwError, BehaviorSubject } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -14,26 +15,40 @@ describe('HeaderComponent', () => {
   let mockRouter: Partial<Router>;
   let mockToastrService: Partial<ToastrService>;
   let mockErrorHandlerService: Partial<ErrorHandlerService>;
+  let mockDialog: Partial<MatDialog>;
 
   beforeEach(() => {
     mockUserService = {
-      getUserDetails: jest.fn().mockReturnValue(of({ username: 'testuser' })),
+      userLoggedIn$: new BehaviorSubject<boolean>(true),
+      getUserDetails: jest.fn().mockReturnValue(of({ username: 'Test User' })),
     };
     mockCartService = {
-      removeFromCart: jest.fn().mockReturnValue(of({})),
+      removeFromCart: jest.fn().mockReturnValue(of(void 0)),
+      cartUpdated$: new BehaviorSubject<void>(void 0),
       getCartItems: jest.fn().mockReturnValue(of({ products: [] })),
-      cartUpdated$: new BehaviorSubject<void>(undefined),
     };
-    mockRouter = { navigate: jest.fn() };
-    mockToastrService = { success: jest.fn() };
-    mockErrorHandlerService = { handleError: jest.fn() };
+    mockRouter = {
+      navigate: jest.fn(),
+    };
+    mockToastrService = {
+      success: jest.fn(),
+    };
+    mockErrorHandlerService = {
+      handleError: jest.fn(),
+    };
+    mockDialog = {
+      open: jest.fn().mockReturnValue({
+        afterClosed: jest.fn().mockReturnValue(of(true)),
+      }),
+    };
 
     component = new HeaderComponent(
       mockUserService as UserService,
       mockCartService as CartService,
       mockRouter as Router,
       mockToastrService as ToastrService,
-      mockErrorHandlerService as ErrorHandlerService
+      mockErrorHandlerService as ErrorHandlerService,
+      mockDialog as MatDialog
     );
   });
 
@@ -41,19 +56,8 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize subscriptions if token is present', () => {
-    localStorage.setItem('token', 'test-token');
-    component = new HeaderComponent(
-      mockUserService as UserService,
-      mockCartService as CartService,
-      mockRouter as Router,
-      mockToastrService as ToastrService,
-      mockErrorHandlerService as ErrorHandlerService
-    );
-    expect(mockUserService.getUserDetails).toHaveBeenCalled();
-  });
-
   it('should toggle cart visibility', () => {
+    component.isCartOpen = false;
     component.toggleCart();
     expect(component.isCartOpen).toBe(true);
     component.toggleCart();
@@ -66,15 +70,15 @@ describe('HeaderComponent', () => {
     expect(component.isCartOpen).toBe(false);
   });
 
-  it('should remove item from cart', () => {
+  it('should remove item from cart and show success message', () => {
     component.cartItems = [
       {
         id: '1',
         name: 'Product 1',
-        price: 100,
         type: 'Type',
         review: 2,
         description: 'Description',
+        price: 5,
       },
     ];
     component.removeItem(0);
@@ -82,6 +86,7 @@ describe('HeaderComponent', () => {
     expect(mockToastrService.success).toHaveBeenCalledWith(
       'Item removed from cart'
     );
+    expect(mockCartService.cartUpdated$).toBeTruthy();
   });
 
   it('should handle error when removing item from cart fails', () => {
@@ -91,16 +96,16 @@ describe('HeaderComponent', () => {
       statusText: 'Bad Request',
     });
     (mockCartService.removeFromCart as jest.Mock).mockReturnValue(
-      throwError(mockErrorResponse)
+      throwError(() => mockErrorResponse)
     );
     component.cartItems = [
       {
         id: '1',
         name: 'Product 1',
-        price: 100,
         type: 'Type',
         review: 2,
         description: 'Description',
+        price: 5,
       },
     ];
     component.removeItem(0);
@@ -109,12 +114,30 @@ describe('HeaderComponent', () => {
     );
   });
 
-  it('should clear username and navigate to login on logout', () => {
+  it('should clear username and navigate to login on logout if confirmed', () => {
+    (mockDialog.open as jest.Mock).mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(true)),
+    });
+
     component.onLogoutClick();
     expect(component.username).toBe('');
     expect(localStorage.getItem('token')).toBeNull();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/login']);
   });
+
+  it('should not clear username and navigate to login on logout if not confirmed', () => {
+    (mockDialog.open as jest.Mock).mockReturnValue({
+      afterClosed: jest.fn().mockReturnValue(of(false)),
+    });
+
+    component.username = 'Test User';
+    localStorage.setItem('token', 'mock-token');
+    component.onLogoutClick();
+    expect(component.username).toBe('Test User');
+    expect(localStorage.getItem('token')).toBe('mock-token');
+    expect(mockRouter.navigate).not.toHaveBeenCalled();
+  });
+
   it('should handle error when getting user details fails', () => {
     const mockErrorResponse = new HttpErrorResponse({
       error: 'Error message',
@@ -124,38 +147,7 @@ describe('HeaderComponent', () => {
     (mockUserService.getUserDetails as jest.Mock).mockReturnValue(
       throwError(() => mockErrorResponse)
     );
-
-    component = new HeaderComponent(
-      mockUserService as UserService,
-      mockCartService as CartService,
-      mockRouter as Router,
-      mockToastrService as ToastrService,
-      mockErrorHandlerService as ErrorHandlerService
-    );
-
-    component.ngOnDestroy(); // Unsubscribe previous subscriptions
-    (component as any).initSubscriptions();
-
-    expect(mockErrorHandlerService.handleError).toHaveBeenCalledWith(
-      mockErrorResponse
-    );
-  });
-
-  it('should handle error when getting cart items fails', () => {
-    const mockErrorResponse = new HttpErrorResponse({
-      error: 'Error message',
-      status: 400,
-      statusText: 'Bad Request',
-    });
-    (mockCartService.getCartItems as jest.Mock).mockReturnValue(
-      throwError(() => mockErrorResponse)
-    );
-
-    component.ngOnDestroy();
-    (component as any).initSubscriptions();
-
-    mockCartService.cartUpdated$?.next();
-
+    component['initSubscriptions']();
     expect(mockErrorHandlerService.handleError).toHaveBeenCalledWith(
       mockErrorResponse
     );

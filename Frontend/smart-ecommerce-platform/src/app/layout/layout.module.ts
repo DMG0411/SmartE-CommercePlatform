@@ -4,8 +4,10 @@ import { HeaderComponent } from './header';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+const COMPONENTS: any[] = [HeaderComponent];
+
 @NgModule({
-  declarations: [HeaderComponent],
+  declarations: [...COMPONENTS],
   exports: [HeaderComponent],
   imports: [BrowserModule, MatIconModule, MatTooltipModule],
   providers: [],

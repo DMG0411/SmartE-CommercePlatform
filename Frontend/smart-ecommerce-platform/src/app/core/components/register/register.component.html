@@ -6,7 +6,7 @@
     </span>
   <h2>Register</h2>
 </div>
-  <form [formGroup]="registerForm">
+  <form [formGroup]="registerForm" (keyup.enter)="registerUser()">
   <input formControlName="username" type="text" placeholder="Username" required>
   <input formControlName="password" type="password" placeholder="Password" required>
   <input formControlName="email" type="email" placeholder="Email address" required>

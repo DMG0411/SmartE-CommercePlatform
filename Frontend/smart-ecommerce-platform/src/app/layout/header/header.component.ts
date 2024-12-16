@@ -1,12 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UserService } from '@app/core';
 import { Product } from '@app/features';
 import { CartService } from '@app/features/services';
-import { ErrorHandlerService } from '@app/shared';
+import { ErrorHandlerService, GenericWarningModalComponent } from '@app/shared';
 import { ToastrService } from 'ngx-toastr';
-import { filter, Subscription, switchMap } from 'rxjs';
+import { filter, Subscription, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'smart-ecommerce-platform-header',
@@ -25,11 +26,10 @@ export class HeaderComponent implements OnDestroy {
     private _cartService: CartService,
     private _router: Router,
     private _toastrService: ToastrService,
-    private _errorHandlerService: ErrorHandlerService
+    private _errorHandlerService: ErrorHandlerService,
+    private _dialog: MatDialog
   ) {
-    if (localStorage.getItem('token') !== null) {
-      this.initSubscriptions();
-    }
+    this.initSubscriptions();
   }
 
   ngOnDestroy(): void {
@@ -59,40 +59,45 @@ export class HeaderComponent implements OnDestroy {
   }
 
   onLogoutClick(): void {
-    this.username = '';
-    localStorage.clear();
-    this._router.navigate(['/login']);
+    this._dialog
+      .open(GenericWarningModalComponent, {
+        data: {
+          title: 'Logout',
+          message: 'Are you sure you want to logout?',
+          proceedButtonText: 'Logout',
+          noButtonText: 'Cancel',
+        },
+      })
+      .afterClosed()
+      .subscribe((proceed) => {
+        if (proceed) {
+          this.username = '';
+          localStorage.clear();
+          this._router.navigate(['/login']);
+        }
+      });
   }
-
   private initSubscriptions(): void {
     this._subs$.add(
       this._userService.userLoggedIn$
         .pipe(
           filter((value) => value),
-          switchMap(() => this._userService.getUserDetails())
+          switchMap(() => this._userService.getUserDetails()),
+          tap((user) => {
+            this.username = user.username!;
+          }),
+          switchMap(() => this._cartService.cartUpdated$),
+          filter(() => localStorage.getItem('token') !== null),
+          switchMap(() => this._cartService.getCartItems())
         )
         .subscribe({
-          next: (user) => {
-            this.username = user.username!;
+          next: (cart) => {
+            this.cartItems = cart.products;
           },
           error: (error: HttpErrorResponse) => {
             this._errorHandlerService.handleError(error);
           },
         })
-    );
-    this._subs$.add(
-      this._cartService.cartUpdated$.subscribe(() => {
-        this._subs$.add(
-          this._cartService.getCartItems().subscribe({
-            next: (cart) => {
-              this.cartItems = cart.products;
-            },
-            error: (error: HttpErrorResponse) => {
-              this._errorHandlerService.handleError(error);
-            },
-          })
-        );
-      })
     );
   }
 }

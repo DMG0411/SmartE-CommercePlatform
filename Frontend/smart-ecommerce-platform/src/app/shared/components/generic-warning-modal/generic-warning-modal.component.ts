@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WarningModal } from '@app/shared';
 
 @Component({
   selector: 'app-generic-warning-modal',
@@ -14,7 +15,7 @@ export class GenericWarningModalComponent {
 
   constructor(
     public dialogRef: MatDialogRef<GenericWarningModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: WarningModal
   ) {
     this.title = data.title;
     this.content = data.message;

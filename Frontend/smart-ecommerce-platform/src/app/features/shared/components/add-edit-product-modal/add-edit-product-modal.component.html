@@ -4,7 +4,7 @@
     <button class="close-btn" (click)="onClose()">×</button>
   </div>
   <div class="modal-content">
-    <form [formGroup]="addProductForm">
+    <form [formGroup]="addProductForm" (keyup.enter)="onProceedClick()">
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" id="name" formControlName="name" />

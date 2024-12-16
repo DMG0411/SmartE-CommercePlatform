@@ -12,13 +12,19 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
+const COMPONENTS: any[] = [
+  HomeComponent,
+  ProductCardComponent,
+  AddEditProductModalComponent,
+];
+
 @NgModule({
   declarations: [
     HomeComponent,
     ProductCardComponent,
     AddEditProductModalComponent,
   ],
-  exports: [HomeComponent, ProductCardComponent, AddEditProductModalComponent],
+  exports: [...COMPONENTS],
   imports: [
     BrowserModule,
     CommonModule,
