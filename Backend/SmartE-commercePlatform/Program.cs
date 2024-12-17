@@ -1,4 +1,5 @@
 using Application;
+using Application.AIML;
 using Application.UseCases.Cart.Commands.RemoveFromCart;
 using Application.UseCases.Cart.Queries.GetCartById;
 using Application.UseCases.Product.Commands.CreateProduct;
@@ -25,6 +26,8 @@ builder.Services.AddScoped<TokenSerializer>();
 builder.Services.AddApplication();
 
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddSingleton<ProductPricePredictionModel>();
 
 builder.Services.AddCors(options => options.AddPolicy(name: "CorsPolicy",
                       builder =>
