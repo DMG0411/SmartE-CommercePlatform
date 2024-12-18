@@ -35,11 +35,11 @@ jobs:
       run: dotnet restore ${{ env.WORKING_DIRECTORY }}
 
     - name: Run tests with coverage
-      run: |
-        dotnet test ${{ env.WORKING_DIRECTORY }} \
-          --no-build \
-          --collect:"XPlat Code Coverage" \
-          --results-directory ./TestResults
+      run: | 
+        dotnet test Backend/UnitTests/UnitTests.csproj \
+        --no-build \
+        --collect:"XPlat Code Coverage" \
+        --results-directory ./TestResults
 
     - name: Convert coverage report to opencover format
       run: |
