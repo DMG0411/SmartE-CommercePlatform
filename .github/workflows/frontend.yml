@@ -1,22 +1,37 @@
-name: Deploy Angular App to GitHub Pages
+name: Deploy Angular App with SonarQube Analysis
 
 on:
   push:
     branches:
       - main
-      
+  pull_request:
+    branches:
+      - main
+
 permissions:
   contents: write
   pages: write
   id-token: write
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+env:
+  SONAR_PROJECT_KEY: SmartE-commercePlatform-Frontend
+  SONAR_ORGANIZATION: dmg0411
 
+jobs:
+  build-analyze-and-deploy:
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        # Shallow clones should be disabled for a better relevancy of analysis
+        fetch-depth: 0
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: 'zulu'
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -26,6 +41,25 @@ jobs:
     - name: Install dependencies
       working-directory: Frontend/smart-ecommerce-platform
       run: npm install
+
+    - name: Run unit tests with coverage
+      working-directory: Frontend/smart-ecommerce-platform
+      run: npm run test:coverage
+
+    - name: SonarQube Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        projectBaseDir: Frontend/smart-ecommerce-platform
+        args: >
+          -Dsonar.organization=dmg0411
+          -Dsonar.projectKey=DMG0411_SmartE-CommercePlatform
+          -Dsonar.sources=src
+          -Dsonar.tests=src
+          -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
+          -Dsonar.coverage.exclusions="**/*.spec.ts,**/main.ts,**/environments/**"
 
     - name: Build Angular app
       working-directory: Frontend/smart-ecommerce-platform
