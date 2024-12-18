@@ -34,11 +34,33 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ${{ env.WORKING_DIRECTORY }}
 
-    - name: Build the project
-      run: dotnet build ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Run tests with coverage
+      run: |
+        dotnet test ${{ env.WORKING_DIRECTORY }} \
+          --no-build \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults
 
-    - name: Run tests
-      run: dotnet test ${{ env.WORKING_DIRECTORY }} --no-build
+    - name: Convert coverage report to opencover format
+      run: |
+        dotnet tool install -g dotnet-reportgenerator-globaltool
+        reportgenerator \
+        -reports:"./TestResults/**/*.trx;./TestResults/**/*.coverage" \
+        -targetdir:"./CoverageReports" \
+        -reporttypes:opencover
+
+    - name: Run SonarQube Analysis
+      run: |
+        dotnet-sonarscanner begin \
+          /k:"SmartEcommercePlatform-Backend" \
+          /d:sonar.host.url="http://<SONARQUBE_SERVER>" \
+          /d:sonar.login="<SONARQUBE_TOKEN>" \
+          /d:sonar.cs.opencover.reportsPaths="./CoverageReports/opencover.xml"
+
+        dotnet build ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }}
+        
+        dotnet-sonarscanner end \
+          /d:sonar.login="<SONARQUBE_TOKEN>"
 
     - name: Publish application
       run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
