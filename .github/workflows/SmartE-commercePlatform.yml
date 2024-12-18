@@ -53,7 +53,7 @@ jobs:
       run: |
         dotnet-sonarscanner begin \
           /k:"SmartEcommercePlatform-Backend" \
-          /d:sonar.host.url="http://<SONARQUBE_SERVER>:9000" \
+          /d:sonar.host.url="http://<SONARQUBE_SERVER>" \
           /d:sonar.login="<SONARQUBE_TOKEN>" \
           /d:sonar.cs.opencover.reportsPaths="./CoverageReports/opencover.xml"
 
