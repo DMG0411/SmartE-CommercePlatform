@@ -24,7 +24,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        # Shallow clones should be disabled for a better relevancy of analysis
         fetch-depth: 0
 
     - name: Set up JDK 17
@@ -59,7 +58,8 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.tests=src
           -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
-          -Dsonar.coverage.exclusions="**/*.spec.ts,**/main.ts,**/environments/**"
+          -Dsonar.coverage.exclusions="**/*.spec.ts,**/main.ts,**/environments/**,src/setup.jest.ts"
+          -Dsonar.test.inclusions="**/*.spec.ts"
 
     - name: Build Angular app
       working-directory: Frontend/smart-ecommerce-platform
