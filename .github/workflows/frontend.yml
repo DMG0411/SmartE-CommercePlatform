@@ -48,7 +48,7 @@ jobs:
         projectBaseDir: Frontend/smart-ecommerce-platform
         args: >
           -Dsonar.organization=dmg0411
-          -Dsonar.projectKey=DMG0411_SmartE-CommercePlatform_Frontend
+          -Dsonar.projectKey=DMG0411_SmartE-CommercePlatform
           -Dsonar.sources=src
           -Dsonar.tests=src
           -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
