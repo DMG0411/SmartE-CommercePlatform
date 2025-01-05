@@ -27,7 +27,7 @@ env:
   SONAR_ORGANIZATION: dmg0411
 
   # Variabile frontend
-  SONAR_PROJECT_KEY_FRONTEND: SmartE-commercePlatform-Frontend
+  SONAR_PROJECT_KEY_FRONTEND: DMG0411_SmartE-CommercePlatform
   FRONTEND_WORKING_DIRECTORY: Frontend/smart-ecommerce-platform
 
 jobs:
