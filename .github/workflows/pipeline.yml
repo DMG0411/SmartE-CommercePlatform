@@ -23,7 +23,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY_BACKEND: Backend/SmartE-commercePlatform.sln
-  SONAR_PROJECT_KEY_BACKEND: SmartE-commercePlatform-Backend
+  SONAR_PROJECT_KEY_BACKEND: DMG0411_SmartE-CommercePlatform
   SONAR_ORGANIZATION: dmg0411
 
   # Variabile frontend
