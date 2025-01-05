@@ -76,6 +76,9 @@ jobs:
           --logger trx \
           -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
+    - name: Debug file paths
+      run: ls -R
+
     - name: Complete SonarQube Analysis
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
