@@ -1,4 +1,4 @@
-name: Build, Analyze and Deploy (Frontend + Backend)
+name: Build and Deploy .NET Core Application
 
 on:
   push:
@@ -8,156 +8,128 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 env:
-  # Variables for SonarQube Analysis
-  SONAR_ORGANIZATION: dmg0411
-  SONAR_PROJECT_KEY_BACKEND: SmartE-commercePlatform-Backend
-  SONAR_PROJECT_KEY_FRONTEND: SmartE-commercePlatform-Frontend
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
-  # Azure Variables
   AZURE_WEBAPP_NAME: SmartE-commercePlatform
   AZURE_WEBAPP_PACKAGE_PATH: SmartE-commercePlatform/publish
+  AZURE_APIM_RESOURCE_PATH: /
+  AZURE_APIM_RESOURCEGROUP: DefaultResourceGroup-DEWC
+  AZURE_APIM_SERVICENAME: SmartE-commercePlatformapi
+  AZURE_APIM_API_ID: SmartE-commercePlatform
+  AZURE_APIM_APPSERVICEURL: https://smarte-commerceplatform.azurewebsites.net
+  SWASHBULCKLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.0.0
+  API_IMPORT_DLL: SmartE-commercePlatform/bin/Release/net8.0/SmartE-commercePlatform.dll
+  API_IMPORT_VERSION: v1
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY_BACKEND: Backend/SmartE-commercePlatform.sln
-  WORKING_DIRECTORY_FRONTEND: Frontend/smart-ecommerce-platform
+  WORKING_DIRECTORY: Backend/SmartE-commercePlatform.sln
+  SONAR_PROJECT_KEY: SmartE-commercePlatform-Backend
+  SONAR_ORGANIZATION: dmg0411
 
 jobs:
-  build-analyze-and-deploy:
+  build-and-analyze:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code for both frontend and backend
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-      # Setup JDK 17 for SonarQube Analysis (required for both frontend & backend)
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: 'zulu'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: 'zulu'
 
-      # Setup .NET SDK (for backend)
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
-      # Setup Node.js (for frontend)
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+    - name: Install SonarQube Scanner locally
+      run: |
+        dotnet tool install dotnet-sonarscanner --tool-path ./.tools
 
-      # Install backend dependencies
-      - name: Restore .NET dependencies for Backend
-        run: dotnet restore ${{ env.WORKING_DIRECTORY_BACKEND }}
+    - name: Add SonarQube Scanner to PATH
+      run: echo "$PWD/.tools" >> $GITHUB_PATH
 
-      # Install frontend dependencies
-      - name: Install dependencies for Frontend
-        working-directory: ${{ env.WORKING_DIRECTORY_FRONTEND }}
-        run: npm install
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.WORKING_DIRECTORY }}
 
-      # Run unit tests and generate coverage for Backend (.NET)
-      - name: Run .NET tests with coverage (Backend)
-        run: |
-          dotnet test ${{ env.WORKING_DIRECTORY_BACKEND }} \
-            --configuration ${{ env.CONFIGURATION }} \
-            --collect:"XPlat Code Coverage" \
-            --logger trx \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+    - name: Begin SonarQube Analysis for Backend
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        dotnet sonarscanner begin \
+          /k:"DMG0411_SmartE-CommercePlatform" \
+          /o:"dmg0411" \
+          /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
+          /d:sonar.coverage.exclusions="**/*Tests*/**,**/Program.cs,**/Startup.cs"
 
-      # Run unit tests and generate coverage for Frontend (Angular + Jest)
-      - name: Run Jest tests with coverage (Frontend)
-        working-directory: ${{ env.WORKING_DIRECTORY_FRONTEND }}
-        run: npm run test:coverage
+    - name: Build the project
+      run: dotnet build ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-restore
 
-      # Begin SonarQube Analysis for Backend
-      - name: Begin SonarQube Analysis for Backend
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          dotnet sonarscanner begin \
-            /k:"${{ env.SONAR_PROJECT_KEY_BACKEND }}" \
-            /o:"${{ env.SONAR_ORGANIZATION }}" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-            /d:sonar.coverage.exclusions="**/*Tests*/**,**/Program.cs,**/Startup.cs"
+    - name: Run tests with coverage
+      run: |
+        dotnet test ${{ env.WORKING_DIRECTORY }} \
+          --configuration ${{ env.CONFIGURATION }} \
+          --collect:"XPlat Code Coverage" \
+          --logger trx \
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
-      # SonarQube analysis for Frontend (Angular)
-      - name: SonarQube Scan for Frontend
-        uses: sonarsource/sonarqube-scan-action@v4.1.0
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          projectBaseDir: ${{ env.WORKING_DIRECTORY_FRONTEND }}
-          args: >
-            -Dsonar.organization=${{ env.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY_FRONTEND }}
-            -Dsonar.sources=src
-            -Dsonar.tests=src
-            -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.coverage.exclusions="**/*.spec.ts,**/main.ts,**/environments/**,src/setup.jest.ts"
-            -Dsonar.test.inclusions="**/*.spec.ts"
+    - name: Debug file paths
+      run: ls -R
 
-      # Build .NET Backend Application
-      - name: Build .NET Backend Application
-        run: dotnet build ${{ env.WORKING_DIRECTORY_BACKEND }} --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Complete SonarQube Analysis for Backend
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-      # Complete SonarQube Analysis for Backend
-      - name: Complete SonarQube Analysis for Backend
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+    - name: Publish application
+      run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-      # Build Angular Frontend Application
-      - name: Build Angular Application (Frontend)
-        working-directory: ${{ env.WORKING_DIRECTORY_FRONTEND }}
-        run: npm run build -- --configuration=production --base-href "https://dmg0411.github.io/SmartE-CommercePlatform/"
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-      # Deploy Backend Application to Azure (Azure WebApp)
-      - name: Deploy Backend to Azure WebApp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.SmartE_commercePlatform_C7C9 }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-analyze
+    steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-      # Deploy Frontend Application to GitHub Pages
-      - name: Deploy Frontend to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          folder: ${{ env.WORKING_DIRECTORY_FRONTEND }}/dist/smart-ecommerce-platform
-          branch: gh-pages
-          clean: true
+    - name: Deploy to Azure WebApp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.SmartE_commercePlatform_C7C9 }}
 
-      # Create API in Azure API Management (Backend)
-      - name: Create API in Azure API Management
-        run: |
-          az apim api create \
-            --resource-group "DefaultResourceGroup-DEWC" \
-            --service-name "SmartE-commercePlatformapi" \
-            --api-id "SmartE-commercePlatform" \
-            --path "/" \
-            --service-url "https://smarte-commerceplatform.azurewebsites.net" \
-            --display-name "SmartE-commercePlatform API" \
-            --description "API for SmartE-commercePlatform" \
-            --protocols "https"
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.SmartE_commercePlatformapi_SPN }}
 
-      # Logout from Azure
-      - name: Logout from Azure
-        run: az logout
+    - name: Create API in Azure API Management
+      run: |
+        az apim api create \
+          --resource-group "${{ env.AZURE_APIM_RESOURCEGROUP }}" \
+          --service-name "${{ env.AZURE_APIM_SERVICENAME }}" \
+          --api-id "${{ env.AZURE_APIM_API_ID }}" \
+          --path "${{ env.AZURE_APIM_RESOURCE_PATH }}" \
+          --service-url "${{ env.AZURE_APIM_APPSERVICEURL }}" \
+          --display-name "SmartE-commercePlatform API" \
+          --description "API for SmartE-commercePlatform" \
+          --protocols "https"
+
+    - name: Logout from Azure
+      run: az logout
