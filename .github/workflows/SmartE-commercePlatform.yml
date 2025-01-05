@@ -31,7 +31,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        # Shallow clones should be disabled for a better relevancy of analysis
         fetch-depth: 0
 
     - name: Set up JDK 17
@@ -52,13 +51,13 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ${{ env.WORKING_DIRECTORY }}
 
-    - name: Begin SonarQube Analysis
+    - name: Begin SonarQube Analysis for Backend
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         dotnet sonarscanner begin \
-          /k:"DMG0411_SmartE-CommercePlatform" \
+          /k:"DMG0411_SmartE-CommercePlatform_Backend" \
           /o:"dmg0411" \
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.host.url="https://sonarcloud.io" \
@@ -68,7 +67,7 @@ jobs:
     - name: Build the project
       run: dotnet build ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-restore
 
-    - name: Run tests with coverage
+    - name: Run tests with coverage for Backend
       run: |
         dotnet test ${{ env.WORKING_DIRECTORY }} \
           --configuration ${{ env.CONFIGURATION }} \
@@ -79,7 +78,7 @@ jobs:
     - name: Debug file paths
       run: ls -R
 
-    - name: Complete SonarQube Analysis
+    - name: Complete SonarQube Analysis for Backend
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
