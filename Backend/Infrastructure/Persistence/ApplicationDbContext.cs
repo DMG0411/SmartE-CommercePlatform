@@ -19,7 +19,8 @@ namespace Infrastructure.Persistence
             {
                 entity.ToTable("products");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnType("uuid")
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
                       .HasDefaultValueSql("uuid_generate_v4()")
                       .ValueGeneratedOnAdd();
                 entity.Property(e => e.Type).IsRequired().HasMaxLength(50);
@@ -33,12 +34,22 @@ namespace Infrastructure.Persistence
             {
                 entity.ToTable("users");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnType("uuid")
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
                       .HasDefaultValueSql("uuid_generate_v4()")
                       .ValueGeneratedOnAdd();
-                entity.Property(e => e.Username).IsRequired().HasMaxLength(30);
-                entity.Property(e => e.Password).IsRequired();
-                entity.Property(e => e.Email).IsRequired();
+                entity.Property(e => e.Username)
+                      .IsRequired()
+                      .HasMaxLength(30);
+                entity.Property(e => e.Password)
+                      .IsRequired();
+                entity.Property(e => e.Email)
+                      .IsRequired();
+
+                // Adăugăm configurarea pentru PhoneNumber (opțional)
+                entity.Property(e => e.PhoneNumber)
+                      .HasMaxLength(20)     // sau oricare limită dorești
+                      .IsRequired(false);
 
                 entity.HasOne(u => u.Cart)
                       .WithOne(c => c.User)
@@ -50,15 +61,18 @@ namespace Infrastructure.Persistence
             {
                 entity.ToTable("carts");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnType("uuid")
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
                       .HasDefaultValueSql("uuid_generate_v4()")
                       .ValueGeneratedOnAdd();
-                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.UserId)
+                      .IsRequired();
 
                 entity.HasMany(c => c.Products)
                       .WithMany(p => p.Carts)
                       .UsingEntity(j => j.ToTable("cart_products"));
             });
         }
+
     }
 }

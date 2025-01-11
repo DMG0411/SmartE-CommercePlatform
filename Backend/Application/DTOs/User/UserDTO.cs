@@ -4,13 +4,16 @@
     {
         public Guid? Id { get; set; }
 
+        public string? PhoneNumber { get; set; }
+
         public UserDTO() : base()
         {
         }
 
-        public UserDTO(Guid id, string username, string password, string email) : base(username, password, email)
+        public UserDTO(Guid id, string username, string password, string email, string? phoneNumber) : base(username, password, email)
         {
             Id = id;
+            PhoneNumber = phoneNumber;
         }
     }
 }
