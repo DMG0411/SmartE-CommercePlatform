@@ -126,7 +126,7 @@ jobs:
       - name: Run unit tests with coverage for Frontend
         working-directory: ${{ env.FRONTEND_WORKING_DIRECTORY }}
         run: npm run test:coverage
-
+    
       - name: List Frontend coverage reports
         working-directory: ${{ env.FRONTEND_WORKING_DIRECTORY }}
         run: ls -R coverage/
