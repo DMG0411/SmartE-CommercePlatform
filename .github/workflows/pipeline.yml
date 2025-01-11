@@ -75,9 +75,10 @@ jobs:
             --configuration ${{ env.CONFIGURATION }} \
             --collect:"XPlat Code Coverage" \
             --logger trx \
+            --results-directory "./TestResults" \
             -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         env:
-          CoverletOutput: TestResults/
+          CoverletOutput: ./TestResults/coverage
           CoverletOutputFormat: opencover
 
       - name: List Backend coverage reports
