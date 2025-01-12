@@ -54,7 +54,7 @@ namespace Product.Controllers
         )
         {
             Guid userId = new Guid(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value!);
-            var products = await _mediator.Send(new GetUserProductsQuery(userId, pageSize, pageNumber));
+            var products = await _mediator.Send(new GetUserProductsQuery(userId, pageNumber, pageSize));
 
             return Ok(products);
         }

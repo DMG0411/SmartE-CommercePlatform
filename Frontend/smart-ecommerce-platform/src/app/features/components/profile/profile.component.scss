@@ -22,24 +22,9 @@
 
     .products-list {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      flex-wrap: wrap;
       justify-content: center;
-      height: calc(100% - 64px);
-      width: 100%;
-
-      .products-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 20px;
-      }
-
-      .mat-paginator {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-      }
+      margin-top: 20px;
     }
 
     form {
@@ -87,5 +72,18 @@
         background-color: #45a049;
       }
     }
+  }
+
+  .mat-paginator {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .no-results img {
+    width: 300px;
+    height: auto;
+    margin-bottom: 15px;
+    opacity: 0.8;
   }
 }

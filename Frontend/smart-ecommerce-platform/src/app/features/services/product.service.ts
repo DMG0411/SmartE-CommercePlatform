@@ -22,11 +22,19 @@ export class ProductService {
 
   getProducts(
     pageNumber: number,
-    pageSize: number
+    pageSize: number,
+    type?: string | null,
+    minPrice?: number | null,
+    maxPrice?: number | null,
+    minReview?: number | null
   ): Observable<PaginatedResponse<Product>> {
     let params: HttpParams = new HttpParams()
       .set('pageNumber', pageNumber)
-      .set('pageSize', pageSize);
+      .set('pageSize', pageSize)
+      .set('type', type || '')
+      .set('minPrice', minPrice || '')
+      .set('maxPrice', maxPrice || '')
+      .set('minReview', minReview || '');
     return this._httpClient.get<PaginatedResponse<Product>>(this._baseUrl, {
       ...this.options,
       params,

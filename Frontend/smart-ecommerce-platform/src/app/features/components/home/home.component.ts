@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import {
@@ -28,6 +29,8 @@ export class HomeComponent implements OnDestroy {
   products: Product[] = [];
   paginatedProducts: Product[] = [];
   typesDropdownSource: Types[] = Object.values(Types);
+  productTypes: string[] = Object.values(Types);
+  filterForm: FormGroup;
 
   private _subs$: Subscription = new Subscription();
 
@@ -35,8 +38,16 @@ export class HomeComponent implements OnDestroy {
     private _productService: ProductService,
     private _dialog: MatDialog,
     private _toastrService: ToastrService,
-    private _errorHandlerService: ErrorHandlerService
-  ) {}
+    private _errorHandlerService: ErrorHandlerService,
+    fb: FormBuilder
+  ) {
+    this.filterForm = fb.group({
+      type: [''],
+      minPrice: [''],
+      maxPrice: [''],
+      minReview: [''],
+    });
+  }
 
   ngOnInit() {
     this.onPageChange({ pageIndex: this.pageNumber, pageSize: this.pageSize });
@@ -49,7 +60,6 @@ export class HomeComponent implements OnDestroy {
   onProductUpdated(): void {
     this.getProducts(this.pageNumber, this.pageSize);
   }
-
 
   openAddProductModal(): void {
     this._subs$.add(
@@ -97,11 +107,30 @@ export class HomeComponent implements OnDestroy {
     this.paginatedProducts = this.products.slice(startIndex, endIndex);
   }
 
-  private getProducts(pageNumber: number, pageSize: number): void {
+  onApplyFilters(): void {
+    const { type, minPrice, maxPrice, minReview } = this.filterForm.value;
+    this.getProducts(
+      this.pageNumber,
+      this.pageSize,
+      type,
+      Number(minPrice),
+      Number(maxPrice),
+      Number(minReview)
+    );
+  }
+
+  private getProducts(
+    pageNumber: number,
+    pageSize: number,
+    type: string | null = null,
+    minPrice: number | null = null,
+    maxPrice: number | null = null,
+    minReview: number | null = null
+  ): void {
     this.isLoading = true;
     this._subs$.add(
       this._productService
-        .getProducts(pageNumber, pageSize)
+        .getProducts(pageNumber, pageSize, type, minPrice, maxPrice, minReview)
         .pipe(
           finalize(() => {
             this.isLoading = false;
