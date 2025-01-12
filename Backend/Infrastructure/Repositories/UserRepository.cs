@@ -73,6 +73,7 @@ namespace Infrastructure.Repositories
             }
             userEntity.Username = user.Username;
             userEntity.PhoneNumber = user.PhoneNumber;
+            userEntity.City = user.City;
 
             context.Users.Update(userEntity);
             await context.SaveChangesAsync();

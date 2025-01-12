@@ -49,6 +49,14 @@ export class UserService {
     return this._httpClient.get<User>(`${this._baseUrl}/details`, this.options);
   }
 
+  editProfile(user: User): Observable<void> {
+    return this._httpClient.put<void>(
+      `${this._baseUrl}/edit`,
+      user,
+      this.options
+    );
+  }
+
   private setUpJwtToken(response: HttpResponse<object>): void {
     const token: string = this.getToken(response);
     const userData: User = this.parseJwt(token);

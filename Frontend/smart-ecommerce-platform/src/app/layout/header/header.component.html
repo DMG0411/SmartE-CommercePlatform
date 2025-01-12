@@ -1,9 +1,10 @@
 <div class="header">
-  <h1 class="header-title">
+  <h1 class="header-title" (click)="goToHome()">
     Smart E-Commerce Platform
   </h1>
   <div *ngIf="username !== ''" class="user-area">
   <h4>Hello, {{username}}!</h4>
+  <mat-icon matTooltip="Profile" (click)="goToProfile()">account_circle</mat-icon>
   <mat-icon matTooltip="Shopping cart" (click)="toggleCart()">shopping_cart</mat-icon>
   <mat-icon matTooltip="Logout" (click)="onLogoutClick()">logout</mat-icon>
 

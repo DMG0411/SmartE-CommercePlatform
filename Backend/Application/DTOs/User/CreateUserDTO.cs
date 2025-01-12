@@ -6,7 +6,7 @@
 
 
         public CreateUserDTO(string username, string password, string email)
-            : base(username, password)
+            : base(email, password)
         {
             Username = username;
         }

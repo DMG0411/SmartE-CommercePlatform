@@ -44,6 +44,14 @@ export class HeaderComponent implements OnDestroy {
     this.isCartOpen = false;
   }
 
+  goToProfile(): void {
+    this._router.navigate(['/profile']);
+  }
+
+  goToHome(): void {
+    this._router.navigate(['/home']);
+  }
+
   removeItem(index: number): void {
     this._subs$.add(
       this._cartService.removeFromCart(this.cartItems[index].id!).subscribe({

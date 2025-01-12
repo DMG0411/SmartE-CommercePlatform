@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://smarte-commerceplatform.azurewebsites.net/api/v1',
+  apiUrl: 'https://localhost:7078/api/v1',
 };

@@ -12,19 +12,22 @@
 
         public string? PhoneNumber { get; set; }
 
+        public string? City { get; set; }
+
         public virtual Cart Cart { get; set; }
 
         public User()
         {
         }
 
-        public User(Guid id, string username, string password, string email, string? phoneNumber = null)
+        public User(Guid id, string username, string password, string email, string? phoneNumber = null,string? city = null)
         {
             Id = id;
             Username = username;
             Password = password;
             Email = email;
             PhoneNumber = phoneNumber;
+            City = city;
         }
     }
 }
