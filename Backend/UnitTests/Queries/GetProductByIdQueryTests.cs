@@ -73,7 +73,8 @@ namespace UnitTests.Queries
                 "Test Product",
                 "Description of product",
                 99.99m,
-                4);
+                4,
+                new Guid("2fb59ab9-6050-47d2-96a3-de0f09b02e5f"));
         }
     }
 }

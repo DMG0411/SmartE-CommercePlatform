@@ -14,13 +14,16 @@
 
         public int Review { get; set; }
 
+        public Guid UserId { get; set; }
+        public virtual User User { get; set; }
+
         public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
         public Product()
         {
         }
 
-        public Product(Guid id, string type, string name, string description, decimal price, int review)
+        public Product(Guid id, string type, string name, string description, decimal price, int review, Guid userId)
         {
             Id = id;
             Type = type;
@@ -28,6 +31,7 @@
             Description = description;
             Price = price;
             Review = review;
+            UserId = userId;
         }
     }
 }

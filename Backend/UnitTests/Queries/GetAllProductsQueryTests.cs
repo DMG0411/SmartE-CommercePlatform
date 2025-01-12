@@ -204,11 +204,11 @@ namespace UnitTests.Queries
         {
             return new List<Product>
             {
-                new(Guid.NewGuid(), "Electronics", "Laptop", "High-end laptop", 1500.00m, 5),
-                new(Guid.NewGuid(), "Electronics", "Smartphone", "Latest smartphone", 800.00m, 4),
-                new(Guid.NewGuid(), "Books", "C# Programming", "Learn C#", 45.00m, 3),
-                new(Guid.NewGuid(), "Books", "ASP.NET Core", "Web development", 55.00m, 4),
-                new(Guid.NewGuid(), "Electronics", "Headphones", "Noise-cancelling", 200.00m, 4)
+                new(Guid.NewGuid(), "Electronics", "Laptop", "High-end laptop", 1500.00m, 5, new Guid()),
+                new(Guid.NewGuid(), "Electronics", "Smartphone", "Latest smartphone", 800.00m, 4, new Guid()),
+                new(Guid.NewGuid(), "Books", "C# Programming", "Learn C#", 45.00m, 3, new Guid()),
+                new(Guid.NewGuid(), "Books", "ASP.NET Core", "Web development", 55.00m, 4, new Guid()),
+                new(Guid.NewGuid(), "Electronics", "Headphones", "Noise-cancelling", 200.00m, 4, new Guid())
             };
         }
 

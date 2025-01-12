@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '@app/core';
 import { ToastrService } from 'ngx-toastr';
 import { ErrorHandlerService } from '@app/shared';
-import { finalize } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
+import { Product } from '@app/features';
+import { ProductService } from '@app/features/services';
 
 @Component({
   selector: 'app-profile',
@@ -15,12 +17,20 @@ export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
   userId: number = 0;
   isLoading: boolean = false;
+  products: Product[] = [];
+  paginatedProducts: Product[] = [];
+  totalCount: number = 0;
+  pageNumber: number = 0;
+  pageSize: number = 5;
+
+  private _subs$: Subscription = new Subscription();
 
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService,
     private _toastrService: ToastrService,
-    private _errorHandlerService: ErrorHandlerService
+    private _errorHandlerService: ErrorHandlerService,
+    private _productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -30,8 +40,8 @@ export class ProfileComponent implements OnInit {
       phoneNumber: [''],
       city: [''],
     });
-
     this.loadProfile();
+    this.getProducts(this.pageNumber, this.pageSize);
   }
 
   loadProfile(): void {
@@ -69,5 +79,44 @@ export class ProfileComponent implements OnInit {
           },
         });
     }
+  }
+
+  onProductUpdated(): void {
+    this.getProducts(this.pageNumber, this.pageSize);
+  }
+
+  onPageChange(event: { pageIndex: number; pageSize: number }): void {
+    this.pageNumber = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getProducts(event.pageIndex, event.pageSize);
+    const startIndex = event.pageIndex * event.pageSize;
+    const endIndex = startIndex + event.pageSize;
+    this.updatePaginatedProducts(startIndex, endIndex);
+  }
+
+  updatePaginatedProducts(startIndex: number, endIndex: number) {
+    this.paginatedProducts = this.products.slice(startIndex, endIndex);
+  }
+
+  private getProducts(pageNumber: number, pageSize: number): void {
+    this.isLoading = true;
+    this._subs$.add(
+      this._productService
+        .getMyProducts(pageNumber, pageSize)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            this.products = response.data;
+            this.totalCount = response.totalItems;
+          },
+          error: (error: HttpErrorResponse) => {
+            this._errorHandlerService.handleError(error);
+          },
+        })
+    );
   }
 }

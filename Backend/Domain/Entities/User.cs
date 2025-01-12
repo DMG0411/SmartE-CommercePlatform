@@ -16,6 +16,8 @@
 
         public virtual Cart Cart { get; set; }
 
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+
         public User()
         {
         }

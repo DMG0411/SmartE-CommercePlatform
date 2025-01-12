@@ -12,13 +12,16 @@
 
         public int Review { get; set; }
 
-        public CreateProductDTO(string type, string name, string description, decimal price, int review)
+        public Guid UserId { get; set; }
+
+        public CreateProductDTO(string type, string name, string description, decimal price, int review, Guid userId)
         {
             Type = type;
             Name = name;
             Description = description;
             Price = price;
             Review = review;
+            UserId = userId;
         }
 
         public CreateProductDTO()

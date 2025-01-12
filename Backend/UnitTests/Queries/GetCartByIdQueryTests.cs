@@ -214,8 +214,8 @@ namespace UnitTests.Queries
                 },
                 Products = new List<Product>
                 {
-                    new Product(Guid.NewGuid(), "Electronics", "Smartphone", "Latest model", 999.99m, 5),
-                    new Product(Guid.NewGuid(), "Accessories", "Phone Case", "Durable and stylish", 19.99m, 4)
+                    new Product(Guid.NewGuid(), "Electronics", "Smartphone", "Latest model", 999.99m, 5, new Guid()),
+                    new Product(Guid.NewGuid(), "Accessories", "Phone Case", "Durable and stylish", 19.99m, 4, new Guid())
                 }
             };
         }

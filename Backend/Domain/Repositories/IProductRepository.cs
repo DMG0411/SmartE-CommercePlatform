@@ -10,5 +10,7 @@ namespace Domain.Repositories
         Task<IEnumerable<Product>> GetAllProducts();
         Task<IEnumerable<Product>> GetFilteredProducts(string? type, decimal? minPrice, decimal? maxPrice, int? minReview);
         Task DeleteProduct(Guid id);
+
+        Task<IEnumerable<Product>> GetUserProducts(Guid userId);
     }
 }

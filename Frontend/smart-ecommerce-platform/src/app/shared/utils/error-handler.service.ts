@@ -14,12 +14,18 @@ export class ErrorHandlerService {
       this._toastrService.error('Session expired. Please login.');
       this._router.navigate(['/login']);
     } else {
-      this._toastrService.error(
-        error.error?.substring(
-          0,
-          error.error?.indexOf('.', error.error.indexOf('.') + 1)
-        ) || 'Unexpected error occurred.'
-      );
+      if (typeof error.error === 'string') {
+        this._toastrService.error(
+          error.error?.substring(
+            0,
+            error.error?.indexOf('.', error.error?.indexOf('.') + 1)
+          ) || 'Unexpected error occurred.'
+        );
+      } else {
+        this._toastrService.error(
+          error.error?.message || 'Unexpected error occurred.'
+        );
+      }
     }
   }
 }

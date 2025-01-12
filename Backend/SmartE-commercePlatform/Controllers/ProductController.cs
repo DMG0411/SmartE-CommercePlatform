@@ -1,15 +1,15 @@
-﻿using Application.DTOs.Product;
-using Application.AIML;
+﻿using Application.AIML;
+using Application.DTOs.Product;
 using Application.UseCases.Product.Commands.CreateProduct;
 using Application.UseCases.Product.Commands.DeleteProduct;
 using Application.UseCases.Product.Commands.UpdateProduct;
 using Application.UseCases.Product.Queries.GetAllProducts;
 using Application.UseCases.Product.Queries.GetProductById;
+using Application.UseCases.Product.Queries.GetUserProducts;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.ML;
 
 namespace Product.Controllers
 {
@@ -45,6 +45,18 @@ namespace Product.Controllers
         {
             await _mediator.Send(new UpdateProductCommand(product));
             return NoContent();
+        }
+
+        [HttpGet("my-products")]
+        public async Task<ActionResult<PagedResult<ProductDTO>>> GetUserProducts(
+         [FromQuery] int pageNumber = 0,
+         [FromQuery] int pageSize = 10
+        )
+        {
+            Guid userId = new Guid(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value!);
+            var products = await _mediator.Send(new GetUserProductsQuery(userId, pageSize, pageNumber));
+
+            return Ok(products);
         }
 
         [HttpGet]

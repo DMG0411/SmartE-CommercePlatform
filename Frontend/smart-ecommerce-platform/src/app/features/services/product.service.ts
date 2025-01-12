@@ -33,6 +33,22 @@ export class ProductService {
     });
   }
 
+  getMyProducts(
+    pageNumber: number,
+    pageSize: number
+  ): Observable<PaginatedResponse<Product>> {
+    let params: HttpParams = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
+    return this._httpClient.get<PaginatedResponse<Product>>(
+      `${this._baseUrl}/my-products`,
+      {
+        ...this.options,
+        params,
+      }
+    );
+  }
+
   createProduct(product: Product) {
     return this._httpClient.post<Product>(this._baseUrl, product, this.options);
   }

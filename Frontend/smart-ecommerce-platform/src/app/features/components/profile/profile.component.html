@@ -1,49 +1,79 @@
 <smart-ecommerce-platform-loader *ngIf="isLoading"></smart-ecommerce-platform-loader>
-<div class="profile-container">
-  <h1>Manage Profile</h1>
-  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
 
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input 
-        id="username" 
-        type="text" 
-        class="form-control" 
-        formControlName="username"
-      />
+<div class="tabs-container">
+  <mat-tab-group>
+    <!-- Tab pentru Manage Profile -->
+    <mat-tab label="Manage Profile">
+      <div class="profile-container">
+        <h1>Manage Profile</h1>
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input 
+              id="username" 
+              type="text" 
+              class="form-control" 
+              formControlName="username"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+              id="email" 
+              type="email" 
+              class="form-control" 
+              [readonly]="true" 
+              formControlName="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phonenumber">Phone Number</label>
+            <input 
+              id="phonenumber" 
+              type="text" 
+              class="form-control" 
+              formControlName="phoneNumber"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="city">City</label>
+            <input 
+              id="city" 
+              type="text" 
+              class="form-control" 
+              formControlName="city"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Edit Profile</button>
+        </form>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="My Products">
+      <div class="products-container">
+        <h1>My Products</h1>
+        <div class="products-list">
+        <div *ngIf="products.length > 0; else noProducts">
+          <smart-ecommerce-platform-product-card *ngFor="let product of products" [product]="product" (productUpdated)="onProductUpdated()"></smart-ecommerce-platform-product-card>
+        </div>
+        <ng-template #noProducts>
+          <p>No products found. Start adding some!</p>
+        </ng-template>
+        <mat-paginator
+        #paginator
+        class="mat-paginator"
+        [length]="totalCount"
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 25]"
+        (page)="onPageChange($event)"
+      >
+      </mat-paginator>
     </div>
-
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input 
-        id="email" 
-        type="email" 
-        class="form-control" 
-        [readonly]="true" 
-        formControlName="email"
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="phonenumber">Phone Number</label>
-      <input 
-        id="phonenumber" 
-        type="text" 
-        class="form-control" 
-        formControlName="phoneNumber"
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="city">City</label>
-      <input 
-        id="city" 
-        type="text" 
-        class="form-control" 
-        formControlName="city"
-      />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Edit Profile</button>
-  </form>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

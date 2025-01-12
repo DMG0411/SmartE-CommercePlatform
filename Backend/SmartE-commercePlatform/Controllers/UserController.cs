@@ -43,13 +43,13 @@ namespace SmartE_commercePlatform.Controllers
         }
 
         [HttpGet("checkToken")]
-       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult CheckToken()
         {
             return NoContent();
         }
 
-       [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("details")]
         public async Task<ActionResult<UserDTO>> GetUserById()
         {

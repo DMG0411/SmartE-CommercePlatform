@@ -81,6 +81,7 @@ export class AddEditProductModalComponent {
       description: this.addProductForm.controls['description']?.value,
       price: Number(this.addProductForm.controls['price']?.value),
       review: Number(this.addProductForm.controls['review']?.value),
+      userId: localStorage.getItem('userId')!,
     };
   }
 }

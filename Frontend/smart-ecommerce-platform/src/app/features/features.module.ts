@@ -11,6 +11,7 @@ import { SharedModule } from '@app/shared';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { MatTabsModule } from '@angular/material/tabs';
 
 const COMPONENTS: any[] = [
   HomeComponent,
@@ -35,6 +36,7 @@ const COMPONENTS: any[] = [
     MatTableModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    MatTabsModule,
   ],
   providers: [],
 })

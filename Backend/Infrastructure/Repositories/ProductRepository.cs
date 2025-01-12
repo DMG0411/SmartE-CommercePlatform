@@ -74,5 +74,10 @@ namespace Infrastructure.Repositories
             await context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Product>> GetUserProducts(Guid userId)
+        {
+            return await context.Products.Where(p => p.UserId == userId).ToListAsync();
+        }
+
     }
 }
