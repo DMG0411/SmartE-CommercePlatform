@@ -66,7 +66,15 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateUser(User user)
         {
-            context.Users.Update(user);
+            var userEntity = context.Users.Find(user.Id);
+            if (userEntity == null)
+            {
+                throw new ResourceNotFoundException(ExceptionsResource.NoResourceFound);
+            }
+            userEntity.Username = user.Username;
+            userEntity.PhoneNumber = user.PhoneNumber;
+
+            context.Users.Update(userEntity);
             await context.SaveChangesAsync();
         }
 

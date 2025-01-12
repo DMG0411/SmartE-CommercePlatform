@@ -103,6 +103,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(30)

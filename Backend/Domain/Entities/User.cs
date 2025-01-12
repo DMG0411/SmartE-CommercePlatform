@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Xml.Linq;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class User
     {
@@ -11,7 +8,9 @@ namespace Domain.Entities
 
         public string Password { get; set; }
 
-        public string Email {  get; set; }
+        public string Email { get; set; }
+
+        public string? PhoneNumber { get; set; }
 
         public virtual Cart Cart { get; set; }
 
@@ -19,13 +18,13 @@ namespace Domain.Entities
         {
         }
 
-    public User(Guid id, string username, string password, string email)
-    {
-        Id = id;
-        Username = username;
-        Password = password;
-        Email = email;
+        public User(Guid id, string username, string password, string email, string? phoneNumber = null)
+        {
+            Id = id;
+            Username = username;
+            Password = password;
+            Email = email;
+            PhoneNumber = phoneNumber;
+        }
     }
-    }
-    
 }

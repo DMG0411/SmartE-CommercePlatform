@@ -17,6 +17,8 @@ namespace Application.UseCases.User.Commands.CreateUser
             RuleFor(user => user.User.Email)
                 .NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("Email must be valid");
+
+            
         }
     }
 }

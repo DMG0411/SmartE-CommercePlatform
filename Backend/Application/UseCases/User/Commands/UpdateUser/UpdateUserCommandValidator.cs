@@ -17,6 +17,11 @@ namespace Application.UseCases.User.Commands.UpdateUser
             RuleFor(user => user.User.Email)
                     .NotEmpty().WithMessage("Email is required")
                     .EmailAddress().WithMessage("Email must be valid");
+
+            RuleFor(user => user.User.PhoneNumber)
+                .Matches(@"^\+?\d+$")
+                .When(user => !string.IsNullOrEmpty(user.User.PhoneNumber))
+                .WithMessage("Phone number must contain only digits and may start with '+' sign");
         }
     }
 }
