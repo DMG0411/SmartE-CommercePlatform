@@ -13,13 +13,13 @@
     <ul *ngIf="cartItems?.length; else noItems">
       <li *ngFor="let product of cartItems; let i = index">
         {{ product.name }} - {{ product.price | currency }}
-        <button matTooltip="Remove item"class="remove-item-btn" (click)="removeItem(i)">X</button>
+        <button matTooltip="Remove item" class="remove-item-btn" (click)="removeItem(i)">X</button>
       </li>
     </ul>
     <ng-template #noItems>
       <p>No items in cart</p>
     </ng-template>
-    <button class="checkout">Checkout</button>
+    <button class="checkout" [disabled]="cartItems.length === 0">Checkout</button>
   </div>
 </div>
 </div>

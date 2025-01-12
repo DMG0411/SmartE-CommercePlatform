@@ -74,6 +74,11 @@
     background-color: #444;
   }
 
+  .shopping-cart-dropdown button.checkout:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+  }
+
   .cart-item {
     display: flex;
     justify-content: space-between;
