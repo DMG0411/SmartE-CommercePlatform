@@ -85,6 +85,11 @@ export class HeaderComponent implements OnDestroy {
         }
       });
   }
+
+  redirectToCheckout(): void {
+    this._router.navigate(['/checkout']);
+  }
+
   private initSubscriptions(): void {
     this._subs$.add(
       this._userService.userLoggedIn$

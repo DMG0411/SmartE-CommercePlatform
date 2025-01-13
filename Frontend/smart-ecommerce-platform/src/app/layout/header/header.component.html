@@ -19,7 +19,7 @@
     <ng-template #noItems>
       <p>No items in cart</p>
     </ng-template>
-    <button class="checkout" [disabled]="cartItems.length === 0">Checkout</button>
+    <button class="checkout" [disabled]="cartItems.length === 0" (click)="redirectToCheckout()">Checkout</button>
   </div>
 </div>
 </div>

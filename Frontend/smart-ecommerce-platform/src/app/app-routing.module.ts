@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent, ProfileComponent } from './features';
+import { CheckoutComponent, HomeComponent, ProfileComponent } from './features';
 import { LoginComponent, RegisterComponent } from './core';
 import { authGuard } from './shared';
 
@@ -26,6 +26,11 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'checkout',
+    component: CheckoutComponent,
     canActivate: [authGuard],
   },
   {

@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HomeComponent, ProfileComponent } from './components';
+import {
+  CheckoutComponent,
+  HomeComponent,
+  ProfileComponent,
+} from './components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddEditProductModalComponent, ProductCardComponent } from './shared';
 import { CommonModule } from '@angular/common';
@@ -18,6 +22,7 @@ const COMPONENTS: any[] = [
   ProductCardComponent,
   AddEditProductModalComponent,
   ProfileComponent,
+  CheckoutComponent,
 ];
 
 @NgModule({
