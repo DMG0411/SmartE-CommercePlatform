@@ -1,7 +1,7 @@
-namespace Application.AIML
+using Microsoft.ML.Data;
+
+public class ProductDataPrediction
 {
-    public class ProductDataPrediction
-    {
-        public float PredictedPrice { get; set; }
-    }
+    [ColumnName("Score")]
+    public float PredictedPrice { get; set; }
 }
