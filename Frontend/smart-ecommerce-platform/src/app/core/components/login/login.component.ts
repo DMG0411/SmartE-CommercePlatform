@@ -65,4 +65,8 @@ export class LoginComponent implements OnDestroy {
   redirectToRegister(): void {
     this._router.navigate(['/register']);
   }
+
+  redirectToForgotPassword(): void {
+    this._router.navigate(['/forgot-password']);
+  }
 }

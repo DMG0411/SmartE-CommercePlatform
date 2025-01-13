@@ -2,11 +2,21 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { LoginComponent, RegisterComponent } from './components';
+import {
+  ForgotPasswordComponent,
+  LoginComponent,
+  RegisterComponent,
+} from './components';
 import { SharedModule } from '@app/shared';
 
+const COMPONENTS: any[] = [
+  LoginComponent,
+  RegisterComponent,
+  ForgotPasswordComponent,
+];
+
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
+  declarations: [...COMPONENTS],
   exports: [],
   imports: [
     BrowserModule,

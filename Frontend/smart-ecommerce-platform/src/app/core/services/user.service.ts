@@ -57,6 +57,14 @@ export class UserService {
     );
   }
 
+  sendResetPassCode(email: string): Observable<void> {
+    return this._httpClient.post<void>(
+      `${this._baseUrl}/forgot-password`,
+      { email },
+      this.options
+    );
+  }
+
   private setUpJwtToken(response: HttpResponse<object>): void {
     const token: string = this.getToken(response);
     const userData: User = this.parseJwt(token);
