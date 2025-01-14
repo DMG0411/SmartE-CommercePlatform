@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Types } from '@app/features/constants';
 import { Product } from '@app/features/models';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 @Component({
   selector: 'app-add-product-modal',
@@ -31,8 +33,8 @@ export class AddEditProductModalComponent {
 
   constructor(
     private _dialogRef: MatDialogRef<AddEditProductModalComponent>,
-    @Inject(MAT_DIALOG_DATA)
-    private _data: { product: Product; modalTitle: string }
+    @Inject(MAT_DIALOG_DATA) private _data: { product: Product; modalTitle: string },
+    private http: HttpClient
   ) {
     if (_data.product) {
       this.addProductForm.patchValue(_data.product);
@@ -67,6 +69,26 @@ export class AddEditProductModalComponent {
 
   onClose(): void {
     this._dialogRef.close(null);
+  }
+
+  onPredictClick(): void {
+    const productData = this.getFormData();
+    
+    
+    const { price, ...productWithoutPrice } = productData;
+
+   
+    this.http.post<{ predictedPrice: number }>('https://localhost:7078/api/v1/product-price-prediction/predict', productWithoutPrice)
+      .subscribe(
+        (response) => {
+     
+          this.addProductForm.controls['price'].setValue(response.predictedPrice);
+        },
+        (error) => {
+          console.error('Prediction failed:', error);
+        
+        }
+      );
   }
 
   isControlInvalid(controlName: string): boolean {

@@ -49,6 +49,7 @@
   </div>
   <div class="modal-footer">
     <button class="no-btn" (click)="onClose()">Cancel</button>
+    <button class="predict-btn" (click)="onPredictClick()">Predict</button>
     <button class="proceed-btn" [disabled]="isFormInvalid()" (click)="onProceedClick()">
       Proceed
     </button>
