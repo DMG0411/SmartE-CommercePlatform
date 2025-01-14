@@ -74,19 +74,19 @@ export class AddEditProductModalComponent {
   onPredictClick(): void {
     const productData = this.getFormData();
     
-    // Exclude the price field before sending the data
+    
     const { price, ...productWithoutPrice } = productData;
 
-    // Send the product data to the API (excluding the price)
+   
     this.http.post<{ predictedPrice: number }>('https://localhost:7078/api/v1/product-price-prediction/predict', productWithoutPrice)
       .subscribe(
         (response) => {
-          // Update the price field with the predicted price received from the API
+     
           this.addProductForm.controls['price'].setValue(response.predictedPrice);
         },
         (error) => {
           console.error('Prediction failed:', error);
-          // Handle error if needed
+        
         }
       );
   }
