@@ -1,8 +1,6 @@
 using Application.AIML;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 
 namespace Product.Controllers
 {
@@ -16,39 +14,43 @@ namespace Product.Controllers
         public ProductPricePredictionController()
         {
             _predictionModel = new ProductPricePredictionModel();
-
             var trainingData = ProductDataGenerator.GetProducts();
-            _predictionModel.Train(trainingData);
+
+            var modelPath = "path_to_saved_model.zip";
+            if (System.IO.File.Exists(modelPath))
+            {
+                _predictionModel.LoadPriceModel(modelPath);
+            }
+            else
+            {
+                _predictionModel.TrainPriceModel(trainingData, modelPath);
+            }
         }
 
-        // POST: api/v1/product-price-prediction/predict
         [AllowAnonymous]
         [HttpPost("predict")]
-        public ActionResult<float> Predict([FromBody] ProductData product)
+        public ActionResult Predict([FromBody] ProductData product)
         {
             try
             {
-                ///debugging
                 Console.WriteLine($"Received product for prediction: {product.Type}, {product.Name}, {product.Description}, {product.Review}");
 
-                ///NU INTELEG
                 var transformedFeatures = _predictionModel.GetTransformedFeatures(new List<ProductData> { product });
-
                 foreach (var features in transformedFeatures)
                 {
                     Console.WriteLine($"Transformed features: {string.Join(", ", features)}");
                 }
 
-                Console.WriteLine("End product features \n");
-
-                
-                var predictedPrice = _predictionModel.Predict(product);
-
+                var predictedPrice = _predictionModel.PredictPrice(product, "path_to_saved_model.zip");
                 return Ok(new { predictedPrice });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = "Model is not trained or loaded.", error = ex.Message });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "Prediction failed", error = ex.Message });
+                return StatusCode(500, new { message = "An unexpected error occurred.", error = ex.Message });
             }
         }
     }
