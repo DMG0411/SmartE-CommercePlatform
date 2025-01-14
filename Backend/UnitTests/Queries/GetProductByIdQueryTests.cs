@@ -62,7 +62,8 @@ namespace UnitTests.Queries
                 product.Name,
                 product.Description,
                 product.Price,
-                product.Review));
+                product.Review,
+                product.UserId));
         }
 
         private Product GenerateProduct(Guid id)

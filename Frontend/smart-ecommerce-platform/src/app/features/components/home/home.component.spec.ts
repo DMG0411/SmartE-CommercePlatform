@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ErrorHandlerService } from '@app/shared';
 import { of, throwError, EMPTY } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormBuilder } from '@angular/forms';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -12,6 +13,7 @@ describe('HomeComponent', () => {
   let mockDialog: Partial<MatDialog>;
   let mockToastrService: Partial<ToastrService>;
   let mockErrorHandlerService: Partial<ErrorHandlerService>;
+  let mockFormBuilder: Partial<FormBuilder>;
 
   beforeEach(() => {
     mockProductService = {
@@ -25,12 +27,14 @@ describe('HomeComponent', () => {
     };
     mockToastrService = { success: jest.fn() };
     mockErrorHandlerService = { handleError: jest.fn() };
+    mockFormBuilder = { group: jest.fn() };
 
     component = new HomeComponent(
       mockProductService as ProductService,
       mockDialog as MatDialog,
       mockToastrService as ToastrService,
-      mockErrorHandlerService as ErrorHandlerService
+      mockErrorHandlerService as ErrorHandlerService,
+      mockFormBuilder as FormBuilder
     );
   });
 

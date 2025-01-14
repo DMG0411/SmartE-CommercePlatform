@@ -35,7 +35,7 @@ namespace UnitTests.Commands
         public async Task CreateProductCommand_ValidCommand_ShouldReturnNewProductId()
         {
             // Arrange
-            var productDTO = new CreateProductDTO("Electronics", "Smartphone", "Latest model", 999.99m, 10); // Review = 10
+            var productDTO = new CreateProductDTO("Electronics", "Smartphone", "Latest model", 999.99m, 10, new Guid()); // Review = 10
             var command = new CreateProductCommand(productDTO);
 
             _validator.ValidateAsync(command, Arg.Any<CancellationToken>())
@@ -66,7 +66,7 @@ namespace UnitTests.Commands
         public async Task CreateProductCommand_InvalidCommand_ShouldReturnEmptyGuid_AndNotCallAddProductAsync()
         {
             // Arrange
-            var productDTO = new CreateProductDTO("Electronics", "Smartphone", "Latest model", -10m, -1); // Invalid price and review
+            var productDTO = new CreateProductDTO("Electronics", "Smartphone", "Latest model", -10m, -1, new Guid()); // Invalid price and review
             var command = new CreateProductCommand(productDTO);
 
             var failures = new[]

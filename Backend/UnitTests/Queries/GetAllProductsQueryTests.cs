@@ -215,7 +215,7 @@ namespace UnitTests.Queries
         private List<ProductDTO> GenerateProductDTOs(IEnumerable<Product> products)
         {
             return products.Select(p =>
-                new ProductDTO(p.Id, p.Type, p.Name, p.Description, p.Price, p.Review)
+                new ProductDTO(p.Id, p.Type, p.Name, p.Description, p.Price, p.Review,p.UserId)
             ).ToList();
         }
     }

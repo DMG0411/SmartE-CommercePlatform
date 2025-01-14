@@ -2,11 +2,14 @@ import { AddEditProductModalComponent } from './add-edit-product-modal.component
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Product } from '@app/features/models';
+import { HttpClient } from '@angular/common/http';
+import { of, throwError } from 'rxjs';
 
 describe('AddEditProductModalComponent', () => {
   let component: AddEditProductModalComponent;
   let mockDialogRef: Partial<MatDialogRef<AddEditProductModalComponent>>;
   let mockData: Partial<{ product: Product }>;
+  let mockHttpClient: Partial<HttpClient>;
 
   beforeEach(() => {
     mockDialogRef = {
@@ -19,12 +22,30 @@ describe('AddEditProductModalComponent', () => {
         description: 'Test Description',
         price: 100,
         review: 2,
+        userId: '2',
       },
     };
 
+    mockHttpClient = {
+      post: jest.fn(),
+    };
+
+    Object.defineProperty(window, 'localStorage', {
+      value: {
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn(),
+      },
+      writable: true,
+    });
+
+    (localStorage.getItem as jest.Mock).mockReturnValue('2');
+
     component = new AddEditProductModalComponent(
       mockDialogRef as MatDialogRef<AddEditProductModalComponent>,
-      mockData as any
+      mockData as any,
+      mockHttpClient as HttpClient
     );
 
     component.addProductForm = new FormGroup({
@@ -67,6 +88,7 @@ describe('AddEditProductModalComponent', () => {
       description: 'Test Description',
       price: 100,
       review: 2,
+      userId: '2',
     });
   });
 
@@ -83,17 +105,11 @@ describe('AddEditProductModalComponent', () => {
       description: 'Test Description',
       price: 100,
       review: 2,
+      userId: '2',
     });
   });
 
   it('should check if form data matches product data', () => {
-    component.addProductForm.patchValue({
-      name: 'Test Product',
-      type: 'Test Type',
-      description: 'Test Description',
-      price: '100',
-      review: '2',
-    });
     expect(component.isFormInvalid()).toBe(false);
 
     component.addProductForm.patchValue({ name: 'Changed Product' });
@@ -143,5 +159,36 @@ describe('AddEditProductModalComponent', () => {
     component.addProductForm.controls['name'].markAsTouched();
     component.addProductForm.controls['name'].setValue('Valid Name');
     expect(component.isControlInvalid('name')).toBe(false);
+  });
+
+  it('should predict price and update form control', () => {
+    const mockResponse = { predictedPrice: 150 };
+    (mockHttpClient.post as jest.Mock).mockReturnValue(of(mockResponse));
+
+    component.onPredictClick();
+
+    expect(mockHttpClient.post).toHaveBeenCalledWith(
+      'https://localhost:7078/api/v1/product-price-prediction/predict',
+      {
+        name: 'Test Product',
+        type: 'Test Type',
+        description: 'Test Description',
+        review: 2,
+        userId: '2',
+      }
+    );
+    expect(component.addProductForm.controls['price'].value).toBe(150);
+  });
+
+  it('should handle error when prediction fails', () => {
+    const mockError = new Error('Prediction failed');
+    (mockHttpClient.post as jest.Mock).mockReturnValue(
+      throwError(() => mockError)
+    );
+    console.error = jest.fn();
+
+    component.onPredictClick();
+
+    expect(console.error).toHaveBeenCalledWith('Prediction failed:', mockError);
   });
 });

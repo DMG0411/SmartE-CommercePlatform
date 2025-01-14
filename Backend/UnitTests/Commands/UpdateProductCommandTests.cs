@@ -24,7 +24,7 @@ namespace UnitTests.Commands
         public async void UpdateProductCommand_ValidCommand_ShouldPass()
         {
             var product = new ProductDTO
-            (new Guid(),"Type", "Product 1", "Description", 10.22m, 3);
+            (new Guid(),"Type", "Product 1", "Description", 10.22m, 3, new Guid());
 
 
             // Arrange
@@ -39,7 +39,7 @@ namespace UnitTests.Commands
         public async void UpdateProductCommand_InvalidCommand_ShouldFail()
         {
             var product = new ProductDTO
-           (new Guid(), "Type", "Product 1", "Description", -1, 3);
+           (new Guid(), "Type", "Product 1", "Description", -1, 3, new Guid());
 
             // Arrange
             var command = new UpdateProductCommand(product);

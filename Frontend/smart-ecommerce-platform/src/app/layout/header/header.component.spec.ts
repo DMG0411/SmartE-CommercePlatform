@@ -79,6 +79,7 @@ describe('HeaderComponent', () => {
         review: 2,
         description: 'Description',
         price: 5,
+        userId: '1',
       },
     ];
     component.removeItem(0);
@@ -106,6 +107,7 @@ describe('HeaderComponent', () => {
         review: 2,
         description: 'Description',
         price: 5,
+        userId: '1',
       },
     ];
     component.removeItem(0);

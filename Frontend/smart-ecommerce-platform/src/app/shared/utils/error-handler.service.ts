@@ -18,7 +18,7 @@ export class ErrorHandlerService {
         this._toastrService.error(
           error.error?.substring(
             0,
-            error.error?.indexOf('.', error.error?.indexOf('.') + 1)
+            error.error?.indexOf('.', error.error?.indexOf('.') + 1) + 1
           ) || 'Unexpected error occurred.'
         );
       } else {
